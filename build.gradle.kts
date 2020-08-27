@@ -7,7 +7,7 @@ plugins {
     // Java support
     id("java")
     // Kotlin support
-    id("org.jetbrains.kotlin.jvm") version "1.4.0"
+    // id("org.jetbrains.kotlin.jvm") version "1.4.0"
     // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
     id("org.jetbrains.intellij") version "0.4.21"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
@@ -15,7 +15,7 @@ plugins {
     // detekt linter - read more: https://detekt.github.io/detekt/kotlindsl.html
     id("io.gitlab.arturbosch.detekt") version "1.11.0"
     // ktlint linter - read more: https://github.com/JLLeitschuh/ktlint-gradle
-    id("org.jlleitschuh.gradle.ktlint") version "9.3.0"
+    // id("org.jlleitschuh.gradle.ktlint") version "9.3.0"
 }
 
 // Import variables from gradle.properties file
@@ -50,6 +50,8 @@ intellij {
     downloadSources = platformDownloadSources.toBoolean()
     updateSinceUntilBuild = true
 
+    setPlugins("org.jetbrains.plugins.yaml:201.6668.27")
+
 //  Plugin Dependencies:
 //  https://www.jetbrains.org/intellij/sdk/docs/basics/plugin_structure/plugin_dependencies.html
 //
@@ -75,11 +77,11 @@ tasks {
         sourceCompatibility = "1.8"
         targetCompatibility = "1.8"
     }
-    listOf("compileKotlin", "compileTestKotlin").forEach {
-        getByName<KotlinCompile>(it) {
-            kotlinOptions.jvmTarget = "1.8"
-        }
-    }
+//    listOf("compileKotlin", "compileTestKotlin").forEach {
+//        getByName<KotlinCompile>(it) {
+//            kotlinOptions.jvmTarget = "1.8"
+//        }
+//    }
 
     withType<Detekt> {
         jvmTarget = "1.8"

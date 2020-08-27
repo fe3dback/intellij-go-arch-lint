@@ -1,19 +1,29 @@
 <idea-plugin>
     <id>com.github.fe3dback.intellijgoarchlint</id>
     <name>intellij-go-arch-lint</name>
+    <version>0.1</version>
     <vendor>fe3dback</vendor>
 
-    <!-- Product and plugin compatibility requirements -->
-    <!-- https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
+    <depends>org.jetbrains.plugins.yaml</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="com.github.fe3dback.intellijgoarchlint.services.MyApplicationService"/>
-        <projectService serviceImplementation="com.github.fe3dback.intellijgoarchlint.services.MyProjectService"/>
-    </extensions>
+        <fileTypeFactory implementation="com.github.fe3dback.intellijgoarchlint.file.YamlFileTypeFactory" />
+        <lang.parserDefinition
+                language="yamlGoArch"
+                implementationClass="com.github.fe3dback.intellijgoarchlint.file.YamlParserDefinition"
+        />
 
-    <projectListeners>
-        <listener class="com.github.fe3dback.intellijgoarchlint.listeners.MyProjectManagerListener"
-                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
-    </projectListeners>
+        <lang.commenter language="yamlGoArch" implementationClass="org.jetbrains.yaml.YAMLCommenter"/>
+        <lang.syntaxHighlighterFactory language="yamlGoArch" implementationClass="org.jetbrains.yaml.YAMLSyntaxHighlighterFactory"/>
+        <lang.braceMatcher language="yamlGoArch" implementationClass="org.jetbrains.yaml.YAMLPairedBraceMatcher"/>
+        <lang.foldingBuilder language="yamlGoArch" id="YAMLFoldingBuilder" implementationClass="org.jetbrains.yaml.folding.YAMLFoldingBuilder"/>
+        <lang.psiStructureViewFactory language="yamlGoArch" implementationClass="org.jetbrains.yaml.structureView.YAMLStructureViewFactory"/>
+        <lang.findUsagesProvider language="yamlGoArch" id="goArchYamlFindUsagesProvider" implementationClass="org.jetbrains.yaml.YAMLFindUsagesProvider"/>
+        <editor.backspaceModeOverride language="yamlGoArch" implementationClass="com.intellij.codeInsight.editorActions.SmartBackspaceDisabler"/>
+        <annotator language="yamlGoArch" implementationClass="org.jetbrains.yaml.annotator.YAMLSameLineCompositeValueErrorAnnotator"/>
+    </extensions>
+    <extensions defaultExtensionNs="com.intellij.spellchecker">
+        <support language="yamlGoArch" implementationClass="org.jetbrains.yaml.YAMLSpellcheckerStrategy"/>
+    </extensions>
 </idea-plugin>
