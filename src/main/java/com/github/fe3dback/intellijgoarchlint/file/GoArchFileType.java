@@ -1,15 +1,11 @@
 package com.github.fe3dback.intellijgoarchlint.file;
 
-import com.github.fe3dback.intellijgoarchlint.Yaml;
-import com.github.fe3dback.intellijgoarchlint.YamlIcons;
-import com.github.fe3dback.intellijgoarchlint.YamlLanguage;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeIdentifiableByVirtualFile;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.impl.StubVirtualFile;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jetbrains.yaml.YAMLLanguage;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -17,29 +13,26 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
-public class YamlFileType extends LanguageFileType implements FileTypeIdentifiableByVirtualFile {
-    public static final YamlFileType INSTANCE = new YamlFileType();
+public class GoArchFileType extends LanguageFileType implements FileTypeIdentifiableByVirtualFile {
+    public static final GoArchFileType INSTANCE = new GoArchFileType();
 
     public static final String DEFAULT_EXTENSION = "yml";
 
     /** Number of bytes to read when guessing for the file type based on content. */
     private static final int BYTES_TO_READ = 4096;
 
-    /** The logger. */
-    private static final Logger logger = LoggerFactory.getLogger(YamlFileType.class);
-
-    protected YamlFileType() {
-        super(YamlLanguage.INSTANCE);
+    protected GoArchFileType() {
+        super(YAMLLanguage.INSTANCE);
     }
 
     @NotNull
     public String getName() {
-        return Yaml.LANGUAGE_NAME;
+        return "YAML_GO_ARCH";
     }
 
     @NotNull
     public String getDescription() {
-        return Yaml.LANGUAGE_DESCRIPTION;
+        return "YAML/GoArch";
     }
 
     @NotNull
@@ -49,7 +42,7 @@ public class YamlFileType extends LanguageFileType implements FileTypeIdentifiab
 
     @NotNull
     public Icon getIcon() {
-        return YamlIcons.FILETYPE_ICON;
+        return GoArchIcons.FILETYPE_ICON;
     }
 
 
@@ -73,7 +66,7 @@ public class YamlFileType extends LanguageFileType implements FileTypeIdentifiab
             final int n = inputStream.read(bytes, 0, BYTES_TO_READ);
             return n > 0 && isGoArchYaml(bytes);
         } catch (final IOException e) {
-            logger.info("Error while determining file type.", e);
+            e.printStackTrace();
         }
 
         return false;

@@ -8,22 +8,15 @@
     <depends>org.jetbrains.plugins.yaml</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <fileTypeFactory implementation="com.github.fe3dback.intellijgoarchlint.file.YamlFileTypeFactory" />
-        <lang.parserDefinition
-                language="yamlGoArch"
-                implementationClass="com.github.fe3dback.intellijgoarchlint.file.YamlParserDefinition"
+        <fileType
+                name="YAML_GO_ARCH"
+                language="yaml"
+                implementationClass="com.github.fe3dback.intellijgoarchlint.file.GoArchFileType"
+        />
+        <completion.contributor
+                language="yaml"
+                implementationClass="com.github.fe3dback.intellijgoarchlint.GoArchYamlCompletionContributor"
         />
 
-        <lang.commenter language="yamlGoArch" implementationClass="org.jetbrains.yaml.YAMLCommenter"/>
-        <lang.syntaxHighlighterFactory language="yamlGoArch" implementationClass="org.jetbrains.yaml.YAMLSyntaxHighlighterFactory"/>
-        <lang.braceMatcher language="yamlGoArch" implementationClass="org.jetbrains.yaml.YAMLPairedBraceMatcher"/>
-        <lang.foldingBuilder language="yamlGoArch" id="YAMLFoldingBuilder" implementationClass="org.jetbrains.yaml.folding.YAMLFoldingBuilder"/>
-        <lang.psiStructureViewFactory language="yamlGoArch" implementationClass="org.jetbrains.yaml.structureView.YAMLStructureViewFactory"/>
-        <lang.findUsagesProvider language="yamlGoArch" id="goArchYamlFindUsagesProvider" implementationClass="org.jetbrains.yaml.YAMLFindUsagesProvider"/>
-        <editor.backspaceModeOverride language="yamlGoArch" implementationClass="com.intellij.codeInsight.editorActions.SmartBackspaceDisabler"/>
-        <annotator language="yamlGoArch" implementationClass="org.jetbrains.yaml.annotator.YAMLSameLineCompositeValueErrorAnnotator"/>
-    </extensions>
-    <extensions defaultExtensionNs="com.intellij.spellchecker">
-        <support language="yamlGoArch" implementationClass="org.jetbrains.yaml.YAMLSpellcheckerStrategy"/>
     </extensions>
 </idea-plugin>

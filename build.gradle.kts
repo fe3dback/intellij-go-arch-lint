@@ -7,7 +7,7 @@ plugins {
     // Java support
     id("java")
     // Kotlin support
-    // id("org.jetbrains.kotlin.jvm") version "1.4.0"
+    id("org.jetbrains.kotlin.jvm") version "1.4.0"
     // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
     id("org.jetbrains.intellij") version "0.4.21"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
@@ -77,11 +77,11 @@ tasks {
         sourceCompatibility = "1.8"
         targetCompatibility = "1.8"
     }
-//    listOf("compileKotlin", "compileTestKotlin").forEach {
-//        getByName<KotlinCompile>(it) {
-//            kotlinOptions.jvmTarget = "1.8"
-//        }
-//    }
+    listOf("compileKotlin", "compileTestKotlin").forEach {
+        getByName<KotlinCompile>(it) {
+            kotlinOptions.jvmTarget = "1.8"
+        }
+    }
 
     withType<Detekt> {
         jvmTarget = "1.8"
