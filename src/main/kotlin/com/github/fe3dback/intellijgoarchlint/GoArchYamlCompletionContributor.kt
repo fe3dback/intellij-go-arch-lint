@@ -6,7 +6,6 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
-import com.intellij.util.containers.stream
 import org.jetbrains.yaml.YAMLLanguage
 import org.jetbrains.yaml.psi.YAMLKeyValue
 import org.jetbrains.yaml.psi.YAMLMapping
@@ -110,7 +109,6 @@ class GoArchYamlCompletionContributor() : CompletionContributor() {
         private fun addCompletionComponents(result: CompletionResultSet, topLevel: YAMLMapping) {
             val componentIds = GoArchPsiUtils.getComponentIds(topLevel)
 
-            // todo: inner places: [deps.$.mayDependOn]
             componentIds.stream().forEachOrdered {
                 componentId -> applyCompletion(result, componentId)
             }
@@ -119,7 +117,6 @@ class GoArchYamlCompletionContributor() : CompletionContributor() {
         private fun addCompletionVendors(result: CompletionResultSet, topLevel: YAMLMapping) {
             val vendorIds = GoArchPsiUtils.getVendorIds(topLevel)
 
-            // todo: inner places: [deps.$.canUse]
             vendorIds.stream().forEachOrdered {
                 vendorId -> applyCompletion(result, vendorId)
             }

@@ -2,14 +2,10 @@ package com.github.fe3dback.intellijgoarchlint
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.util.containers.stream
-import org.jetbrains.annotations.Nullable
 import org.jetbrains.yaml.YAMLUtil
 import org.jetbrains.yaml.psi.*
 import org.jetbrains.yaml.psi.impl.YAMLBlockMappingImpl
-import java.util.*
-import java.util.function.IntFunction
-import java.util.function.Predicate
+import java.util.stream.Stream
 import kotlin.streams.toList
 
 object GoArchPsiUtils {
@@ -27,7 +23,7 @@ object GoArchPsiUtils {
         return null
     }
 
-    private fun getNodeByName(mapping : YAMLMapping, nodeName : String): YAMLKeyValue? {
+    fun getNodeByName(mapping : YAMLMapping, nodeName : String): YAMLKeyValue? {
         val result = mapping.keyValues.stream()
                 .filter { keyValue -> keyValue.keyText == nodeName }
                 .findFirst()
@@ -47,19 +43,33 @@ object GoArchPsiUtils {
         return getNodeByName(mapping, topLevelAttributeVendors)
     }
 
-    private fun getNodeChildKeys(node: YAMLKeyValue?): List<String> {
+    fun getNodeKeyValuesStream(node: YAMLKeyValue?): Stream<YAMLKeyValue> {
         if (node == null) {
-            return emptyList()
+            return Stream.empty()
         }
 
-        val mappingChild = node.children.firstOrNull() ?: return emptyList()
+        val mappingChild = node.children.firstOrNull() ?: return Stream.empty()
         if (mappingChild !is YAMLBlockMappingImpl) {
-            return emptyList()
+            return Stream.empty()
         }
 
         return mappingChild.keyValues.stream()
-                .map { kv -> kv.keyText }
-                .toList()
+    }
+
+    fun getFirstKeyValueInNodeByName(node: YAMLKeyValue, name: String): YAMLKeyValue? {
+        val found = getNodeKeyValuesStream(node)
+            .filter { it.keyText == name }
+            .findFirst()
+
+        if (found.isEmpty) {
+            return null
+        }
+
+        return found.get()
+    }
+
+    private fun getNodeChildKeys(node: YAMLKeyValue?): List<String> {
+        return getNodeKeyValuesStream(node).map { kv -> kv.keyText }.toList()
     }
 
     fun getComponentIds(mapping : YAMLMapping): List<String> {
