@@ -7,7 +7,6 @@ import com.intellij.psi.util.parentOfType
 import com.intellij.util.ProcessingContext
 import org.jetbrains.yaml.YAMLLanguage
 import org.jetbrains.yaml.psi.YAMLKeyValue
-import org.jetbrains.yaml.psi.YAMLMapping
 
 class GoArchYamlReferenceContributor : PsiReferenceContributor() {
     override fun registerReferenceProviders(registrar: PsiReferenceRegistrar) {
@@ -23,8 +22,6 @@ class GoArchYamlReferenceContributor : PsiReferenceContributor() {
     }
 
     private class DepsReferenceProvider : PsiReferenceProvider() {
-        private val nodeDependencies = "deps"
-
         override fun getReferencesByElement(element: PsiElement, context: ProcessingContext): Array<PsiReference> {
             if (!GoArchPsiUtils.isGoArchFile(element)) {
                 return emptyArray()
@@ -35,7 +32,7 @@ class GoArchYamlReferenceContributor : PsiReferenceContributor() {
             val parent = yamlKeyValue.parentOfType<YAMLKeyValue>() ?: return emptyArray()
 
             // check than current section has deps name
-            if (parent.keyText != nodeDependencies) {
+            if (parent.keyText != GoArch.specDeps) {
                 return emptyArray()
             }
 
@@ -45,7 +42,7 @@ class GoArchYamlReferenceContributor : PsiReferenceContributor() {
             }
 
             // ok, this is deps section, and componentName, we can link it to components.%name%
-            return arrayOf(GoArchReferenceToComponent(yamlKeyValue))
+            return arrayOf(GoArchReferenceToSection(yamlKeyValue, GoArch.specComponents))
         }
     }
 }

@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.github.fe3dback.intellijgoarchlint</id>
     <name>GoArchLint file support</name>
-    <version>0.3</version>
+    <version>0.4</version>
     <vendor url="https://github.com/fe3dback">fe3dback</vendor>
     <description>Provides assistance for editing go arch YAML files.</description>
 
@@ -14,18 +14,27 @@
                 language="yaml"
                 implementationClass="com.github.fe3dback.intellijgoarchlint.file.GoArchFileType"
         />
+
         <completion.contributor
                 language="yaml"
                 implementationClass="com.github.fe3dback.intellijgoarchlint.GoArchYamlCompletionContributor"
         />
+
         <psi.referenceContributor
                 language="yaml"
                 implementation="com.github.fe3dback.intellijgoarchlint.GoArchYamlReferenceContributor"
         />
-        <lang.findUsagesProvider
-                language="yaml"
-                implementationClass="com.github.fe3dback.intellijgoarchlint.GoArchYamlFindUsagesProvider"
-        />
+
+<!--        <lang.findUsagesProvider-->
+<!--                language="yaml"-->
+<!--                implementationClass="com.github.fe3dback.intellijgoarchlint.GoArchYamlFindUsagesProvider"-->
+<!--        />-->
+
+<!--        <localInspection language="yaml" displayName="GoArchLint (YAML)"-->
+<!--                         groupName="GoArchLint Inspections"-->
+<!--                         enabledByDefault="true"-->
+<!--                         level="ERROR"-->
+<!--                         implementationClass="com.github.fe3dback.intellijgoarchlint.inspection.SchemeInspection"/>-->
 
     </extensions>
 </idea-plugin>

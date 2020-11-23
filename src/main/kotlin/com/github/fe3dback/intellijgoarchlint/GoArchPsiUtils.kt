@@ -9,10 +9,6 @@ import java.util.stream.Stream
 import kotlin.streams.toList
 
 object GoArchPsiUtils {
-    private const val topLevelAttributeComponents = "components"
-    private const val topLevelAttributeVendors = "vendors"
-    private const val topLevelAttributeDependencies = "deps"
-
     fun getTopLevelMapping(psiElement: PsiElement): YAMLMapping? {
         val doc = PsiTreeUtil.getParentOfType(psiElement, YAMLDocument::class.java) ?: return null
         val topLevelValue = doc.topLevelValue
@@ -36,11 +32,11 @@ object GoArchPsiUtils {
     }
 
     private fun getNodeComponents(mapping : YAMLMapping): YAMLKeyValue? {
-        return getNodeByName(mapping, topLevelAttributeComponents)
+        return getNodeByName(mapping, GoArch.specComponents)
     }
 
     private fun getNodeVendors(mapping : YAMLMapping): YAMLKeyValue? {
-        return getNodeByName(mapping, topLevelAttributeVendors)
+        return getNodeByName(mapping, GoArch.specVendors)
     }
 
     fun getNodeKeyValuesStream(node: YAMLKeyValue?): Stream<YAMLKeyValue> {
@@ -89,13 +85,14 @@ object GoArchPsiUtils {
             return false
         }
 
-        val keys = YAMLUtil.getTopLevelKeys(file)
+        return hasTopLevelKeyInYamlFile(file, GoArch.specComponents) &&
+                hasTopLevelKeyInYamlFile(file, GoArch.specDeps)
+    }
 
-        return keys.stream()
-                .map { obj: YAMLKeyValue -> obj.keyText }
-                .anyMatch { anObject: String -> topLevelAttributeComponents == anObject }
-            && keys.stream()
-                .map { obj: YAMLKeyValue -> obj.keyText }
-                .anyMatch { anObject: String -> topLevelAttributeDependencies == anObject }
+    private fun hasTopLevelKeyInYamlFile(file: YAMLFile, key: String): Boolean {
+        return YAMLUtil.getTopLevelKeys(file)
+            .stream()
+            .map { obj: YAMLKeyValue -> obj.keyText }
+            .anyMatch { key == it }
     }
 }

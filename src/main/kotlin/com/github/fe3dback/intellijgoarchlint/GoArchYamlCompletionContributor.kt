@@ -5,6 +5,7 @@ import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.util.parentOfType
 import com.intellij.util.ProcessingContext
 import org.jetbrains.yaml.YAMLLanguage
 import org.jetbrains.yaml.psi.YAMLKeyValue
@@ -21,38 +22,32 @@ class GoArchYamlCompletionContributor() : CompletionContributor() {
     }
 
     private class Provider : CompletionProvider<CompletionParameters>() {
-        private val keyWordDependencies = "deps"
-        private val keyWordVersion = "version"
-        private val keyWordAllow = "allow"
-        private val keyWordExclude = "exclude"
-        private val keyWordExcludeFiles = "excludeFiles"
-        private val keyWordComponents = "components"
-        private val keyWordVendors = "vendors"
-        private val keyWordCommonComponents = "commonComponents"
-        private val keyWordCommonVendors = "commonVendors"
-
-        private val keyWordProviderComponents = "mayDependOn"
-        private val keyWordProviderVendors = "canUse"
-
-        private val keyWordsTopLevel = arrayOf(
-                keyWordVersion,
-                keyWordAllow,
-                keyWordExclude,
-                keyWordExcludeFiles,
-                keyWordComponents,
-                keyWordVendors,
-                keyWordCommonComponents,
-                keyWordCommonVendors,
-                keyWordDependencies
+        val componentBasedSections = arrayOf(
+                GoArch.specDeps,
+                GoArch.specCommonComponents
         )
 
-        private val componentBasedSections = arrayOf(
-                keyWordDependencies,
-                keyWordCommonComponents
+        val vendorBasedSections = arrayOf(
+                GoArch.specCommonVendors
         )
 
-        private val vendorBasedSections = arrayOf(
-                keyWordCommonVendors
+        val topLevelKeyWords = arrayOf(
+                GoArch.specVersion,
+                GoArch.specAllow,
+                GoArch.specExclude,
+                GoArch.specExcludeFiles,
+                GoArch.specComponents,
+                GoArch.specVendors,
+                GoArch.specCommonComponents,
+                GoArch.specCommonVendors,
+                GoArch.specDeps
+        )
+
+        val depsKeyWords = arrayOf(
+                GoArch.specDepsCanUse,
+                GoArch.specDepsMayDependOn,
+                GoArch.specDepsAnyVendorDeps,
+                GoArch.specDepsAnyProjectDeps,
         )
 
         private fun applyCompletion(result: CompletionResultSet, name: String) {
@@ -76,10 +71,21 @@ class GoArchYamlCompletionContributor() : CompletionContributor() {
                 return
             }
 
-            // semantic completion
-            // -------------------
             val topLevelMapping = GoArchPsiUtils.getTopLevelMapping(keyValue) ?: return
             val currentSectionName = keyValue.keyText
+
+            // keyWords deps completion
+            // -------------------
+            val grandParent = keyValue.parentOfType<YAMLKeyValue>()
+            if (grandParent != null) {
+                val grandParentIsTopSection = grandParent.parentOfType<YAMLKeyValue>() == null
+                if (grandParentIsTopSection && grandParent.keyText == GoArch.specDeps) {
+                    addDepsKeyWordCompletion(result)
+                }
+            }
+
+            // semantic completion
+            // -------------------
 
             // sem, top - components
             if (componentBasedSections.contains(currentSectionName)) {
@@ -91,17 +97,23 @@ class GoArchYamlCompletionContributor() : CompletionContributor() {
             }
 
             // sem - deps
-            if (currentSectionName == keyWordProviderComponents) {
+            if (currentSectionName == GoArch.specDepsMayDependOn) {
                 addCompletionComponents(result, topLevelMapping)
             }
 
-            if (currentSectionName == keyWordProviderVendors) {
+            if (currentSectionName == GoArch.specDepsCanUse) {
                 addCompletionVendors(result, topLevelMapping)
             }
         }
 
         private fun addCompletionTopLevel(result: CompletionResultSet) {
-            Arrays.stream(keyWordsTopLevel).forEachOrdered {
+            Arrays.stream(topLevelKeyWords).forEachOrdered {
+                kw: String -> applyCompletion(result, kw)
+            }
+        }
+
+        private fun addDepsKeyWordCompletion(result: CompletionResultSet) {
+            Arrays.stream(depsKeyWords).forEachOrdered {
                 kw: String -> applyCompletion(result, kw)
             }
         }

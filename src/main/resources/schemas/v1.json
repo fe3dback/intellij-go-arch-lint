@@ -1,0 +1,145 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "title": "Go arch v1 scheme",
+  "description": "The root schema comprises the entire JSON document.",
+  "default": {},
+  "required": [
+    "version",
+    "components",
+    "deps"
+  ],
+  "properties": {
+    "version": {
+      "$id": "#/properties/version",
+      "default": 1,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "allow": {
+      "$id": "#/properties/allow",
+      "type": "object",
+      "required": [
+        "depOnAnyVendor"
+      ],
+      "properties": {
+        "depOnAnyVendor": {
+          "$id": "#/properties/allow/properties/depOnAnyVendor",
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "exclude": {
+      "$ref": "#/definitions/stringList"
+    },
+    "excludeFiles": {
+      "$ref": "#/definitions/stringList"
+    },
+    "vendors": {
+      "$ref": "#/definitions/lookupImportList"
+    },
+    "components": {
+      "$ref": "#/definitions/lookupImportList"
+    },
+    "commonComponents": {
+      "$ref": "#/definitions/stringList"
+    },
+    "commonVendors": {
+      "$ref": "#/definitions/stringList"
+    },
+    "deps": {
+      "$id": "#/properties/deps",
+      "type": "object",
+      "required": [],
+      "properties": {},
+      "additionalProperties": {
+        "$id": "#/properties/deps/properties/item",
+        "type": "object",
+        "title": "The item schema",
+        "default": {},
+        "required": [],
+        "oneOf": [
+          {
+            "required": [
+              "canUse"
+            ]
+          },
+          {
+            "required": [
+              "anyVendorDeps"
+            ]
+          },
+          {
+            "required": [
+              "mayDependOn"
+            ]
+          },
+          {
+            "required": [
+              "anyProjectDeps"
+            ]
+          }
+        ],
+        "properties": {
+          "canUse": {
+            "$ref": "#/definitions/stringList"
+          },
+          "mayDependOn": {
+            "$ref": "#/definitions/stringList"
+          },
+          "anyProjectDeps": {
+            "$id": "#/properties/deps/properties/item/properties/anyProjectDeps",
+            "type": "boolean"
+          },
+          "anyVendorDeps": {
+            "$id": "#/properties/deps/properties/item/properties/anyVendorDeps",
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "stringList": {
+      "$id": "#/definitions/stringList",
+      "type": "array",
+      "additionalItems": true,
+      "items": {
+        "$id": "#/definitions/stringList/items",
+        "anyOf": [
+          {
+            "$id": "#/definitions/stringList/items/item",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    "lookupImportList": {
+      "$id": "#/definitions/lookupImportList",
+      "type": "object",
+      "required": [],
+      "properties": {},
+      "additionalProperties": {
+        "$ref": "#/definitions/lookupImport"
+      }
+    },
+    "lookupImport": {
+      "$id": "#/definitions/lookupImport",
+      "type": "object",
+      "required": [
+        "in"
+      ],
+      "properties": {
+        "in": {
+          "$id": "#/definitions/lookupImport/in",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

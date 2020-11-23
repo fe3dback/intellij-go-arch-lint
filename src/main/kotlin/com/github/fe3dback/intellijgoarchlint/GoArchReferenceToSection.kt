@@ -6,9 +6,7 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.*
 import org.jetbrains.yaml.psi.YAMLKeyValue
 
-class GoArchReferenceToComponent(psiElement: YAMLKeyValue) : PsiReferenceBase<YAMLKeyValue>(psiElement), PsiPolyVariantReference {
-    private val nodeComponents = "components"
-
+class GoArchReferenceToSection(psiElement: YAMLKeyValue, private val sectionName: String) : PsiReferenceBase<YAMLKeyValue>(psiElement), PsiPolyVariantReference {
     override fun resolve(): PsiElement? {
         val result = multiResolve(false).firstOrNull() ?: return null
         return result.element
@@ -21,8 +19,8 @@ class GoArchReferenceToComponent(psiElement: YAMLKeyValue) : PsiReferenceBase<YA
         }
 
         val topMapping = GoArchPsiUtils.getTopLevelMapping(element) ?: return emptyArray()
-        val componentsNode = GoArchPsiUtils.getNodeByName(topMapping, nodeComponents) ?: return emptyArray()
-        val component = GoArchPsiUtils.getFirstKeyValueInNodeByName(componentsNode, name) ?: return emptyArray()
+        val sectionNode = GoArchPsiUtils.getNodeByName(topMapping, sectionName) ?: return emptyArray()
+        val component = GoArchPsiUtils.getFirstKeyValueInNodeByName(sectionNode, name) ?: return emptyArray()
         val key = component.key ?: return emptyArray()
 
         return arrayOf(PsiElementResolveResult(key))
@@ -30,14 +28,14 @@ class GoArchReferenceToComponent(psiElement: YAMLKeyValue) : PsiReferenceBase<YA
 
     override fun getVariants(): Array<LookupElement> {
         val topMapping = GoArchPsiUtils.getTopLevelMapping(element) ?: return emptyArray()
-        val componentsNode = GoArchPsiUtils.getNodeByName(topMapping, nodeComponents)
+        val sectionNode = GoArchPsiUtils.getNodeByName(topMapping, sectionName)
         val results : ArrayList<LookupElement> = ArrayList()
 
-        GoArchPsiUtils.getNodeKeyValuesStream(componentsNode).forEach {
+        GoArchPsiUtils.getNodeKeyValuesStream(sectionNode).forEach {
             results.add(LookupElementBuilder
                 .create(it.keyText)
                 .withIcon(GoArchIcons.FILETYPE_ICON)
-                .withTypeText(nodeComponents)
+                .withTypeText(sectionName)
             )
         }
 
