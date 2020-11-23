@@ -13,14 +13,11 @@ https://github.com/fe3dback/go-arch-lint
 
 ## Features
 
-- [x] Code completion (done)
-- [ ] Refactoring
-- [ ] Find usage
-- [ ] Go language realtime imports inspection
-
-## Preview
-
-
+- Code completion (done)
+- Scheme validation (done)
+- Refactoring
+- Find usage
+- Go language realtime imports inspection
 
 ## Supported IDE's
 
