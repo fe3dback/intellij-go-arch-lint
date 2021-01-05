@@ -8,6 +8,7 @@ import org.jetbrains.yaml.psi.impl.YAMLBlockMappingImpl
 import java.util.stream.Stream
 import kotlin.streams.toList
 
+@Deprecated("Prev")
 object GoArchPsiUtils {
     fun getTopLevelMapping(psiElement: PsiElement): YAMLMapping? {
         val doc = PsiTreeUtil.getParentOfType(psiElement, YAMLDocument::class.java) ?: return null

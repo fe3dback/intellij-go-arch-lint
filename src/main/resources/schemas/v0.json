@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": false,
+  "definitions": {
+    "version": {
+      "description": "Defines arch file syntax and file validation rules",
+      "title": "Scheme Version",
+      "type": "integer"
+    }
+  },
+  "description": "Arch file scheme version 0 (invalid file)",
+  "id": "https://github.com/fe3dback/go-arch-lint/v0",
+  "properties": {
+    "version": {
+      "$ref": "#/definitions/version"
+    }
+  },
+  "required": [
+    "version"
+  ],
+  "title": "Go Arch Lint Invalid",
+  "type": "object"
+}

@@ -12,6 +12,7 @@ import org.jetbrains.yaml.psi.YAMLKeyValue
 import org.jetbrains.yaml.psi.YAMLMapping
 import java.util.*
 
+@Deprecated("Prev")
 class GoArchYamlCompletionContributor() : CompletionContributor() {
     init {
         extend(
@@ -31,25 +32,6 @@ class GoArchYamlCompletionContributor() : CompletionContributor() {
                 GoArch.specCommonVendors
         )
 
-        val topLevelKeyWords = arrayOf(
-                GoArch.specVersion,
-                GoArch.specAllow,
-                GoArch.specExclude,
-                GoArch.specExcludeFiles,
-                GoArch.specComponents,
-                GoArch.specVendors,
-                GoArch.specCommonComponents,
-                GoArch.specCommonVendors,
-                GoArch.specDeps
-        )
-
-        val depsKeyWords = arrayOf(
-                GoArch.specDepsCanUse,
-                GoArch.specDepsMayDependOn,
-                GoArch.specDepsAnyVendorDeps,
-                GoArch.specDepsAnyProjectDeps,
-        )
-
         private fun applyCompletion(result: CompletionResultSet, name: String) {
             result.addElement(LookupElementBuilder
                 .create(name)
@@ -67,22 +49,11 @@ class GoArchYamlCompletionContributor() : CompletionContributor() {
             // -------------------
             val keyValue = PsiTreeUtil.getParentOfType(psiElement, YAMLKeyValue::class.java)
             if (keyValue == null) {
-                addCompletionTopLevel(result)
                 return
             }
 
             val topLevelMapping = GoArchPsiUtils.getTopLevelMapping(keyValue) ?: return
             val currentSectionName = keyValue.keyText
-
-            // keyWords deps completion
-            // -------------------
-            val grandParent = keyValue.parentOfType<YAMLKeyValue>()
-            if (grandParent != null) {
-                val grandParentIsTopSection = grandParent.parentOfType<YAMLKeyValue>() == null
-                if (grandParentIsTopSection && grandParent.keyText == GoArch.specDeps) {
-                    addDepsKeyWordCompletion(result)
-                }
-            }
 
             // semantic completion
             // -------------------
@@ -103,18 +74,6 @@ class GoArchYamlCompletionContributor() : CompletionContributor() {
 
             if (currentSectionName == GoArch.specDepsCanUse) {
                 addCompletionVendors(result, topLevelMapping)
-            }
-        }
-
-        private fun addCompletionTopLevel(result: CompletionResultSet) {
-            Arrays.stream(topLevelKeyWords).forEachOrdered {
-                kw: String -> applyCompletion(result, kw)
-            }
-        }
-
-        private fun addDepsKeyWordCompletion(result: CompletionResultSet) {
-            Arrays.stream(depsKeyWords).forEachOrdered {
-                kw: String -> applyCompletion(result, kw)
             }
         }
 

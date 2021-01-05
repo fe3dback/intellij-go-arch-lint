@@ -4,17 +4,11 @@ import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    // Java support
     id("java")
-    // Kotlin support
     id("org.jetbrains.kotlin.jvm") version "1.4.0"
-    // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
     id("org.jetbrains.intellij") version "0.4.21"
-    // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
     id("org.jetbrains.changelog") version "0.4.0"
-    // detekt linter - read more: https://detekt.github.io/detekt/kotlindsl.html
     id("io.gitlab.arturbosch.detekt") version "1.11.0"
-    // ktlint linter - read more: https://github.com/JLLeitschuh/ktlint-gradle
     // id("org.jlleitschuh.gradle.ktlint") version "9.3.0"
 }
 
@@ -51,11 +45,6 @@ intellij {
     updateSinceUntilBuild = true
 
     setPlugins("org.jetbrains.plugins.yaml:201.6668.27")
-
-//  Plugin Dependencies:
-//  https://www.jetbrains.org/intellij/sdk/docs/basics/plugin_structure/plugin_dependencies.html
-//
-//  setPlugins("java")
 }
 
 // Configure detekt plugin.

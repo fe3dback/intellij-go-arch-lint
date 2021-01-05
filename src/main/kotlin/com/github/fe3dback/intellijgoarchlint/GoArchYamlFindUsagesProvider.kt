@@ -7,6 +7,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiNamedElement
 import org.jetbrains.yaml.psi.YAMLKeyValue
 
+@Deprecated("Prev")
 class GoArchYamlFindUsagesProvider : FindUsagesProvider {
     override fun getWordsScanner(): WordsScanner {
         return GoArchYamlWordScanner()

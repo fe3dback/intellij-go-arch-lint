@@ -6,6 +6,7 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.*
 import org.jetbrains.yaml.psi.YAMLKeyValue
 
+@Deprecated("Prev")
 class GoArchReferenceToSection(psiElement: YAMLKeyValue, private val sectionName: String) : PsiReferenceBase<YAMLKeyValue>(psiElement), PsiPolyVariantReference {
     override fun resolve(): PsiElement? {
         val result = multiResolve(false).firstOrNull() ?: return null
