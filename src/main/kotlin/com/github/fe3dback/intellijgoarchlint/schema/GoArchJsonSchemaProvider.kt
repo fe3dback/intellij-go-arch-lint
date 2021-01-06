@@ -4,8 +4,6 @@ import com.github.fe3dback.intellijgoarchlint.GoArch
 import com.github.fe3dback.intellijgoarchlint.file.GoArchFileType
 import com.github.fe3dback.intellijgoarchlint.project.GoArchFileUtils
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.application.ReadAction
-import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
@@ -16,12 +14,7 @@ import com.jetbrains.jsonSchema.extension.SchemaType
 import com.jetbrains.jsonSchema.impl.JsonSchemaVersion
 import org.jetbrains.yaml.psi.YAMLFile
 import java.net.URL
-import com.intellij.openapi.module.ModuleUtilCore
-import com.intellij.openapi.util.ThrowableComputable
 import com.jetbrains.jsonSchema.ide.JsonSchemaService
-import org.jetbrains.concurrency.await
-import java.util.concurrent.Callable
-
 
 class GoArchJsonSchemaProvider(
     private val project: Project,

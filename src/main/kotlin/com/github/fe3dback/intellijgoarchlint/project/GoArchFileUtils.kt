@@ -3,8 +3,6 @@ package com.github.fe3dback.intellijgoarchlint.project
 import com.github.fe3dback.intellijgoarchlint.GoArch
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.newvfs.impl.StubVirtualFile
-import com.intellij.psi.PsiManager
-import com.jetbrains.rd.util.catch
 import org.jetbrains.yaml.YAMLUtil
 import org.jetbrains.yaml.psi.YAMLFile
 import java.io.IOException
