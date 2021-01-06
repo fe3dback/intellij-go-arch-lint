@@ -1,16 +1,15 @@
 package com.github.fe3dback.intellijgoarchlint
 
 import com.github.fe3dback.intellijgoarchlint.file.GoArchIcons
+import com.github.fe3dback.intellijgoarchlint.psi.GoArchPsiUtils
 import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.psi.util.parentOfType
 import com.intellij.util.ProcessingContext
 import org.jetbrains.yaml.YAMLLanguage
 import org.jetbrains.yaml.psi.YAMLKeyValue
 import org.jetbrains.yaml.psi.YAMLMapping
-import java.util.*
 
 @Deprecated("Prev")
 class GoArchYamlCompletionContributor() : CompletionContributor() {

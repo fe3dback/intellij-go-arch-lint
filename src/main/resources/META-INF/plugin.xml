@@ -6,8 +6,6 @@
     <description>Provides assistance for editing go arch YAML files.</description>
 
     <depends>com.intellij.modules.platform</depends>
-    <depends>com.intellij.modules.lang</depends>
-    <depends>com.intellij.modules.json</depends>
     <depends>org.jetbrains.plugins.yaml</depends>
 
     <extensions defaultExtensionNs="JavaScript">
@@ -27,10 +25,15 @@
                 implementation="com.github.fe3dback.intellijgoarchlint.schema.GoArchJsonSchemaEnabler"
         />
 
-        <completion.contributor
-                language="yaml"
-                implementationClass="com.github.fe3dback.intellijgoarchlint.GoArchYamlCompletionContributor"
-        />
+<!--        <psi.referenceContributor-->
+<!--            language="yaml"-->
+<!--            implementation="com.github.fe3dback.intellijgoarchlint.reference.GoArchReferenceContributor"-->
+<!--        />-->
+
+<!--        <completion.contributor-->
+<!--                language="yaml"-->
+<!--                implementationClass="com.github.fe3dback.intellijgoarchlint.GoArchYamlCompletionContributor"-->
+<!--        />-->
 
 <!--        <psi.referenceContributor-->
 <!--                language="yaml"-->

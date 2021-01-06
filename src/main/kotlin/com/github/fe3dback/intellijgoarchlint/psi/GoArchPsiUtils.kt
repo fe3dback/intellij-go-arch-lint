@@ -1,5 +1,6 @@
-package com.github.fe3dback.intellijgoarchlint
+package com.github.fe3dback.intellijgoarchlint.psi
 
+import com.github.fe3dback.intellijgoarchlint.GoArch
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.yaml.YAMLUtil
@@ -8,7 +9,6 @@ import org.jetbrains.yaml.psi.impl.YAMLBlockMappingImpl
 import java.util.stream.Stream
 import kotlin.streams.toList
 
-@Deprecated("Prev")
 object GoArchPsiUtils {
     fun getTopLevelMapping(psiElement: PsiElement): YAMLMapping? {
         val doc = PsiTreeUtil.getParentOfType(psiElement, YAMLDocument::class.java) ?: return null

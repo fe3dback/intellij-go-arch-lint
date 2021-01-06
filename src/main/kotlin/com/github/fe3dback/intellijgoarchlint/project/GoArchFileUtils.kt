@@ -1,6 +1,7 @@
 package com.github.fe3dback.intellijgoarchlint.project
 
 import com.github.fe3dback.intellijgoarchlint.GoArch
+import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.newvfs.impl.StubVirtualFile
 import org.jetbrains.yaml.YAMLUtil
@@ -45,18 +46,24 @@ object GoArchFileUtils {
 
         // in case of multiple go arch files, or for custom names,
         // we want analyze yaml file for some patterns
-        try {
-            file.inputStream.use {
-                inputStream ->
-                val bytes = ByteArray(VALIDATE_BYTES_TO_READ)
-                val n = inputStream.read(bytes, 0, VALIDATE_BYTES_TO_READ)
-                return n > 0 && isGoArchYaml(bytes)
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
+        return fileBytesMatchGoArchPattern(file)
+    }
 
-        return false
+    private fun fileBytesMatchGoArchPattern(file: VirtualFile): Boolean {
+        return ReadAction.compute<Boolean, Throwable> {
+            try {
+                file.inputStream.use {
+                        inputStream ->
+                    val bytes = ByteArray(VALIDATE_BYTES_TO_READ)
+                    val n = inputStream.read(bytes, 0, VALIDATE_BYTES_TO_READ)
+                    return@compute n > 0 && isGoArchYaml(bytes)
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+
+            return@compute false
+        }
     }
 
     /**
@@ -109,18 +116,20 @@ object GoArchFileUtils {
     }
 
     private fun data(file: YAMLFile): GoArchFile {
-        val topKeys = YAMLUtil.getTopLevelKeys(file)
-        val versionProp = topKeys.firstOrNull { prop -> prop.keyText == GoArch.specVersion }
+        return ReadAction.compute<GoArchFile, Throwable> {
+            val topKeys = YAMLUtil.getTopLevelKeys(file)
+            val versionProp = topKeys.firstOrNull { prop -> prop.keyText == GoArch.specVersion }
 
-        var version = 0
-        if (versionProp != null) {
-            version = try {
-                versionProp.valueText.format("%d").toInt()
-            } catch (e: NumberFormatException) {
-                0
+            var version = 0
+            if (versionProp != null) {
+                version = try {
+                    versionProp.valueText.format("%d").toInt()
+                } catch (e: NumberFormatException) {
+                    0
+                }
             }
-        }
 
-        return GoArchFile(version)
+            return@compute GoArchFile(version)
+        }
     }
 }

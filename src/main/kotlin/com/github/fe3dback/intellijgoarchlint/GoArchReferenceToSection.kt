@@ -1,6 +1,7 @@
 package com.github.fe3dback.intellijgoarchlint
 
 import com.github.fe3dback.intellijgoarchlint.file.GoArchIcons
+import com.github.fe3dback.intellijgoarchlint.psi.GoArchPsiUtils
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.*

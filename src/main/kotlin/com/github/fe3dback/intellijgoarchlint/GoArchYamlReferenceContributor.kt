@@ -1,5 +1,6 @@
 package com.github.fe3dback.intellijgoarchlint
 
+import com.github.fe3dback.intellijgoarchlint.psi.GoArchPsiUtils
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.patterns.PsiElementPattern
 import com.intellij.psi.*

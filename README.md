@@ -13,10 +13,10 @@ https://github.com/fe3dback/go-arch-lint
 
 ## Features
 
-- Code completion (done)
-- Scheme validation (done)
-- Refactoring
-- Find usage
+- Json Schema validation/completion (versioned) (done)
+- Basic code completion (done)
+- Reference provider, refactoring (wip)
+- Linter integration (mapping)
 - Go language realtime imports inspection
 
 ## Supported IDE's
