@@ -1,0 +1,13 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="JavaScript">
+        <JsonSchema.ProviderFactory
+                implementation="com.github.fe3dback.intellijgoarchlint.schema.GoArchJsonSchemaProviderFactory"
+        />
+    </extensions>
+
+    <extensions defaultExtensionNs="com.intellij.json">
+        <jsonSchemaEnabler
+                implementation="com.github.fe3dback.intellijgoarchlint.schema.GoArchJsonSchemaEnabler"
+        />
+    </extensions>
+</idea-plugin>

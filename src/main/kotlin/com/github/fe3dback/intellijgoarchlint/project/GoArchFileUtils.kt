@@ -1,6 +1,7 @@
 package com.github.fe3dback.intellijgoarchlint.project
 
 import com.github.fe3dback.intellijgoarchlint.GoArch
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.newvfs.impl.StubVirtualFile
@@ -27,7 +28,7 @@ object GoArchFileUtils {
      */
     fun isValid(file: VirtualFile): Boolean {
         if (file is StubVirtualFile) {
-            return false // Helps New -> File get correct file type
+            return false
         }
 
         if (!file.isValid) {
@@ -116,20 +117,18 @@ object GoArchFileUtils {
     }
 
     private fun data(file: YAMLFile): GoArchFile {
-        return ReadAction.compute<GoArchFile, Throwable> {
-            val topKeys = YAMLUtil.getTopLevelKeys(file)
-            val versionProp = topKeys.firstOrNull { prop -> prop.keyText == GoArch.specVersion }
+        val topKeys = YAMLUtil.getTopLevelKeys(file)
+        val versionProp = topKeys.firstOrNull { prop -> prop.keyText == GoArch.specVersion }
 
-            var version = 0
-            if (versionProp != null) {
-                version = try {
-                    versionProp.valueText.format("%d").toInt()
-                } catch (e: NumberFormatException) {
-                    0
-                }
+        var version = 0
+        if (versionProp != null) {
+            version = try {
+                versionProp.valueText.format("%d").toInt()
+            } catch (e: NumberFormatException) {
+                0
             }
-
-            return@compute GoArchFile(version)
         }
+
+        return GoArchFile(version)
     }
 }

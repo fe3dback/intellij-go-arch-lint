@@ -5,15 +5,13 @@ import com.github.fe3dback.intellijgoarchlint.file.GoArchFileType
 import com.github.fe3dback.intellijgoarchlint.project.GoArchFileUtils
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
-import com.intellij.util.ResourceUtil
 import com.jetbrains.jsonSchema.extension.JsonSchemaFileProvider
+import com.jetbrains.jsonSchema.extension.JsonSchemaProviderFactory
 import com.jetbrains.jsonSchema.extension.SchemaType
 import com.jetbrains.jsonSchema.impl.JsonSchemaVersion
 import org.jetbrains.yaml.psi.YAMLFile
-import java.net.URL
 import com.jetbrains.jsonSchema.ide.JsonSchemaService
 
 class GoArchJsonSchemaProvider(
@@ -21,21 +19,42 @@ class GoArchJsonSchemaProvider(
     private val targetVersion: Int,
     private val isDefault: Boolean,
 ) : JsonSchemaFileProvider {
+
+    private val versionString = "v%d".format(targetVersion)
+
+    private val schemaFileLazy: VirtualFile? by lazy {
+        JsonSchemaProviderFactory.getResourceFile(this::class.java, "/schemas/%s.json".format(versionString))
+    }
+
+    override fun getSchemaFile() = schemaFileLazy
+
+    override fun getSchemaVersion() = JsonSchemaVersion.SCHEMA_7
+
+    override fun getSchemaType() = SchemaType.embeddedSchema
+
+    override fun getName(): String {
+        if (isDefault) {
+            return "GoArch (dumb)"
+        }
+
+        return "GoArch (%s)".format(versionString)
+    }
+
     override fun isAvailable(file: VirtualFile): Boolean {
         if (!JsonSchemaService.Impl.get(project).isApplicableToFile(file)) {
             return false
         }
 
-        return ApplicationManager.getApplication().runReadAction<Boolean> {
-            isAvailableSync(file)
-        }
-    }
-
-    private fun isAvailableSync(file: VirtualFile): Boolean {
         if (!GoArchFileType.INSTANCE.isMyFileType(file)) {
             return false
         }
 
+        return ApplicationManager.getApplication().runReadAction<Boolean> {
+            return@runReadAction isVersionedArchFile(file)
+        }
+    }
+
+    private fun isVersionedArchFile(file: VirtualFile): Boolean {
         val psiManager = PsiManager.getInstance(project)
         val psiFile = psiManager.findFile(file)
         if (psiFile !is YAMLFile) {
@@ -49,30 +68,5 @@ class GoArchJsonSchemaProvider(
         }
 
         return version == targetVersion
-    }
-
-    override fun getSchemaVersion(): JsonSchemaVersion {
-        return JsonSchemaVersion.SCHEMA_7
-    }
-
-    override fun getSchemaType(): SchemaType {
-        return SchemaType.embeddedSchema
-    }
-
-    override fun getName(): String {
-        if (isDefault) {
-            return "GoArch (dumb)"
-        }
-
-        return "GoArch (v%d)".format(targetVersion)
-    }
-
-    override fun getSchemaFile(): VirtualFile? {
-        val url: URL = ResourceUtil.getResource(
-            javaClass,
-            "schemas",
-            "v%d.json".format(targetVersion)
-        )
-        return VfsUtil.findFileByURL(url)
     }
 }

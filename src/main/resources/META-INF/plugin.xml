@@ -7,22 +7,13 @@
 
     <depends>com.intellij.modules.platform</depends>
     <depends>org.jetbrains.plugins.yaml</depends>
-
-    <extensions defaultExtensionNs="JavaScript">
-        <JsonSchema.ProviderFactory
-                implementation="com.github.fe3dback.intellijgoarchlint.schema.GoArchJsonSchemaProviderFactory"
-        />
-    </extensions>
+    <depends optional="true" config-file="plugin-json.xml">com.intellij.modules.json</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <fileType
                 name="YAML_GO_ARCH"
                 language="yaml"
                 implementationClass="com.github.fe3dback.intellijgoarchlint.file.GoArchFileType"
-        />
-
-        <json.jsonSchemaEnabler
-                implementation="com.github.fe3dback.intellijgoarchlint.schema.GoArchJsonSchemaEnabler"
         />
 
 <!--        <psi.referenceContributor-->
