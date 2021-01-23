@@ -21,20 +21,5 @@
 <!--            implementation="com.github.fe3dback.intellijgoarchlint.reference.GoArchReferenceContributor"-->
 <!--        />-->
 
-<!--        <completion.contributor-->
-<!--                language="yaml"-->
-<!--                implementationClass="com.github.fe3dback.intellijgoarchlint.GoArchYamlCompletionContributor"-->
-<!--        />-->
-
-<!--        <psi.referenceContributor-->
-<!--                language="yaml"-->
-<!--                implementation="com.github.fe3dback.intellijgoarchlint.GoArchYamlReferenceContributor"-->
-<!--        />-->
-
-<!--        <lang.findUsagesProvider-->
-<!--                language="yaml"-->
-<!--                implementationClass="com.github.fe3dback.intellijgoarchlint.GoArchYamlFindUsagesProvider"-->
-<!--        />-->
-
     </extensions>
 </idea-plugin>
