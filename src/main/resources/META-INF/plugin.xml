@@ -18,7 +18,7 @@
 
         <psi.referenceContributor
             language="yaml"
-            implementation="com.github.fe3dback.intellijgoarchlint.reference.GoArchReferenceContributor"
+            implementation="com.github.fe3dback.intellijgoarchlint.reference.contributor.GoArchReferenceContributor"
         />
 
     </extensions>
