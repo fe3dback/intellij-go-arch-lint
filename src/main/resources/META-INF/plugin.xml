@@ -16,10 +16,10 @@
                 implementationClass="com.github.fe3dback.intellijgoarchlint.file.GoArchFileType"
         />
 
-<!--        <psi.referenceContributor-->
-<!--            language="yaml"-->
-<!--            implementation="com.github.fe3dback.intellijgoarchlint.reference.GoArchReferenceContributor"-->
-<!--        />-->
+        <psi.referenceContributor
+            language="yaml"
+            implementation="com.github.fe3dback.intellijgoarchlint.reference.GoArchReferenceContributor"
+        />
 
     </extensions>
 </idea-plugin>
