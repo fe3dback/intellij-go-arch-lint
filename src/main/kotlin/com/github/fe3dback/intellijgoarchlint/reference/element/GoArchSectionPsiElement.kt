@@ -14,6 +14,7 @@ import com.intellij.psi.meta.PsiMetaOwner
 import com.intellij.psi.meta.PsiPresentableMetaData
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.SearchScope
+import org.jetbrains.yaml.psi.YAMLKeyValue
 import javax.swing.Icon
 
 class GoArchSectionPsiElement(
@@ -41,15 +42,20 @@ class GoArchSectionPsiElement(
 
     override fun getUseScope(): SearchScope = resolveScope
 
-    override fun isEquivalentTo(another: PsiElement?): Boolean {
-        return equals(another) ||
-            (
-                another != null
-                && another is GoArchSectionPsiElement
-                && another.elementName == elementName
-                && another.typeName == typeName
-            )
-    }
+//    override fun isEquivalentTo(another: PsiElement?): Boolean {
+//        return another != null
+//                && another is YAMLKeyValue
+//                && parent is YAMLKeyValue
+//                && another.keyText == parent.keyText
+//
+////        return equals(another) ||
+////            (
+////                another != null
+////                && another is GoArchSectionPsiElement
+////                && another.elementName == elementName
+////                && another.typeName == typeName
+////            )
+//    }
 
     override fun navigate(requestFocus: Boolean) {
         if (DumbService.getInstance(project).isDumb) return

@@ -1,19 +1,18 @@
 package com.github.fe3dback.intellijgoarchlint.reference.ref
 
+import com.github.fe3dback.intellijgoarchlint.GoArch
 import com.github.fe3dback.intellijgoarchlint.reference.provider.GoArchSectionReferenceProvider
-import com.intellij.codeInsight.daemon.EmptyResolveMessageProvider
+import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReferenceBase
 
-class GoArchComponentNameReference(element: PsiElement, private val provider: GoArchSectionReferenceProvider):
-    PsiReferenceBase<PsiElement>(element),
-    EmptyResolveMessageProvider {
-
-    private fun getReferenceTypeName(): String = "GoArch Component Type"
-    override fun getUnresolvedMessagePattern(): String {
-        return "Incorrect ${getReferenceTypeName()} ''{0}''"
-    }
+class GoArchComponentNameReference(
+    element: PsiElement,
+    range: TextRange,
+    private val name: String
+): PsiReferenceBase<PsiElement>(element, range) {
+    private val provider = GoArchSectionReferenceProvider(GoArch.specComponents, element)
 
     override fun getVariants() = provider.variants()
-    override fun resolve() = provider.match()
+    override fun resolve() = provider.match(name)
 }

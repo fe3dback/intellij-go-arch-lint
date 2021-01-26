@@ -11,9 +11,7 @@ class GoArchVendorNameReferenceProvider: PsiReferenceProvider() {
     override fun getReferencesByElement(element: PsiElement, context: ProcessingContext): Array<PsiReference> {
         if (element !is YAMLPlainTextImpl) return PsiReference.EMPTY_ARRAY
 
-        val sectionProvider = GoArchSectionReferenceProvider(element, GoArch.specVendors)
-
-        return arrayOf(GoArchVendorNameReference(element, sectionProvider))
+        return arrayOf(GoArchVendorNameReference(element, element.textValue))
     }
 }
 

@@ -2,15 +2,15 @@ package com.github.fe3dback.intellijgoarchlint.reference.provider
 
 import com.github.fe3dback.intellijgoarchlint.file.GoArchIcons
 import com.github.fe3dback.intellijgoarchlint.psi.GoArchPsiUtils
-import com.github.fe3dback.intellijgoarchlint.reference.element.GoArchSectionPsiElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiElementResolveResult
 import org.jetbrains.yaml.psi.YAMLKeyValue
-import org.jetbrains.yaml.psi.impl.YAMLPlainTextImpl
 import java.util.stream.Stream
 
 class GoArchSectionReferenceProvider(
-    private val element: YAMLPlainTextImpl,
-    private val sectionName: String
+    private val sectionName: String,
+    private val sourceElement: PsiElement
 ) {
     fun variants(): Array<Any>  {
         val itemsStream = stream() ?: return emptyArray()
@@ -24,17 +24,18 @@ class GoArchSectionReferenceProvider(
             .toArray()
     }
 
-    fun match(): GoArchSectionPsiElement? {
+    fun match(name: String): PsiElement? {
         val itemsStream = stream() ?: return null
 
         val firstMatch = itemsStream
-            .filter { it.key!!.text == element.textValue }
+            .filter { it.key!!.text == name }
             .map {
-                GoArchSectionPsiElement(
-                    it.key!!,
-                    sectionName,
-                    element.textValue
-                )
+                PsiElementResolveResult(it.firstChild)
+//                GoArchSectionPsiElement(
+//                    it.key!!,
+//                    sectionName,
+//                    element.textValue
+//                )
             }
             .findFirst()
 
@@ -42,11 +43,11 @@ class GoArchSectionReferenceProvider(
             return null
         }
 
-        return firstMatch.get()
+        return firstMatch.get().element
     }
 
     private fun stream(): Stream<YAMLKeyValue>? {
-        val mapping = GoArchPsiUtils.getTopLevelMapping(element) ?: return null
+        val mapping = GoArchPsiUtils.getTopLevelMapping(sourceElement) ?: return null
         val componentNode = GoArchPsiUtils.getNodeByName(mapping, sectionName) ?: return null
         val componentsStream = GoArchPsiUtils.getNodeKeyValuesStream(componentNode)
 
