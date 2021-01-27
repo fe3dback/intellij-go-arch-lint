@@ -6,6 +6,8 @@ import com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.yaml.YAMLUtil
 import org.jetbrains.yaml.psi.*
 import org.jetbrains.yaml.psi.impl.YAMLBlockMappingImpl
+import org.jetbrains.yaml.psi.impl.YAMLPlainTextImpl
+import org.jetbrains.yaml.psi.impl.YAMLSequenceImpl
 import java.util.stream.Stream
 import kotlin.streams.toList
 
@@ -51,6 +53,23 @@ object GoArchPsiUtils {
         }
 
         return mappingChild.keyValues.stream()
+    }
+
+    fun getNodeSequenceItemsStream(node: YAMLKeyValue?): Stream<YAMLScalar> {
+        if (node == null) {
+            return Stream.empty()
+        }
+
+        val mappingChild = node.children.firstOrNull() ?: return Stream.empty()
+        if (mappingChild !is YAMLSequence) {
+            return Stream.empty()
+        }
+
+        return mappingChild
+            .items
+            .stream()
+            .filter { it.value is YAMLScalar }
+            .map { it.value as YAMLScalar }
     }
 
     fun getFirstKeyValueInNodeByName(node: YAMLKeyValue, name: String): YAMLKeyValue? {

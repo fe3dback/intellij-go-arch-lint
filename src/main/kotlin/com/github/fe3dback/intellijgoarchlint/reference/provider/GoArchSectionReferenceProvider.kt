@@ -31,11 +31,6 @@ class GoArchSectionReferenceProvider(
             .filter { it.key!!.text == name }
             .map {
                 PsiElementResolveResult(it.firstChild)
-//                GoArchSectionPsiElement(
-//                    it.key!!,
-//                    sectionName,
-//                    element.textValue
-//                )
             }
             .findFirst()
 

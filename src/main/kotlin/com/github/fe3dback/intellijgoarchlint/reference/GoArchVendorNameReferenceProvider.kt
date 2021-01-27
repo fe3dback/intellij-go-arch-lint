@@ -1,7 +1,5 @@
 package com.github.fe3dback.intellijgoarchlint.reference
 
-import com.github.fe3dback.intellijgoarchlint.GoArch
-import com.github.fe3dback.intellijgoarchlint.reference.provider.GoArchSectionReferenceProvider
 import com.github.fe3dback.intellijgoarchlint.reference.ref.GoArchVendorNameReference
 import com.intellij.psi.*
 import com.intellij.util.ProcessingContext

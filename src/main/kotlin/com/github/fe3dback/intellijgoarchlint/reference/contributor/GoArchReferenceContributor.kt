@@ -1,6 +1,7 @@
 package com.github.fe3dback.intellijgoarchlint.reference.contributor
 
 import com.github.fe3dback.intellijgoarchlint.reference.GoArchComponentNameReferenceProvider
+import com.github.fe3dback.intellijgoarchlint.reference.GoArchComponentUsagesReferenceProvider
 import com.github.fe3dback.intellijgoarchlint.reference.GoArchVendorNameReferenceProvider
 import com.github.fe3dback.intellijgoarchlint.reference.pattern.GoArchPsiPattern
 import com.intellij.psi.PsiReferenceContributor
@@ -21,9 +22,9 @@ class GoArchReferenceContributor: PsiReferenceContributor() {
         )
 
         // components
-//        registrar.registerReferenceProvider(
-//            GoArchPsiPattern.componentNames(),
-//            GoArchComponentNameReferenceProvider()
-//        )
+        registrar.registerReferenceProvider(
+            GoArchPsiPattern.componentNames(),
+            GoArchComponentUsagesReferenceProvider()
+        )
     }
 }

@@ -7,23 +7,15 @@ import com.intellij.psi.PsiElement
 import org.jetbrains.yaml.psi.*
 
 object GoArchPsiPattern {
-//    fun componentNames() = sectionKeys(GoArch.specComponents)
-//    fun vendorNames() = sectionKeys(GoArch.specVendors)
+    fun componentNames() = sectionKeys(GoArch.specComponents)
+    fun vendorNames() = sectionKeys(GoArch.specVendors)
     fun commonComponents() = sectionSequenceItems(GoArch.specCommonComponents)
     fun commonVendors() = sectionSequenceItems(GoArch.specCommonVendors)
 
-//    private fun sectionKeys(sectionName: String): PsiElementPattern.Capture<PsiElement> {
-//        return PlatformPatterns.psiElement()
-//            .withParent(
-//                abstractKeyValue()
-//                    .withParent(
-//                        abstractMapping()
-//                            .withParent(
-//                                section(sectionName)
-//                            )
-//                    )
-//            )
-//    }
+    private fun sectionKeys(sectionName: String): PsiElementPattern.Capture<YAMLKeyValue> {
+        return abstractKeyValue()
+            .withSuperParent(2, section(sectionName))
+    }
 
     private fun sectionSequenceItems(sectionName: String): PsiElementPattern.Capture<PsiElement> {
         return PlatformPatterns.psiElement()
