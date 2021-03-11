@@ -1,13 +1,13 @@
 <idea-plugin>
     <id>com.github.fe3dback.intellijgoarchlint</id>
     <name>GoArchLint File Support</name>
-    <version>0.5.0</version>
+    <version>0.6.0</version>
     <vendor url="https://github.com/fe3dback">fe3dback</vendor>
     <description>Provides assistance for editing go arch YAML files.</description>
 
     <depends>com.intellij.modules.platform</depends>
     <depends>org.jetbrains.plugins.yaml</depends>
-<!--    <depends optional="true" config-file="plugin-json.xml">com.intellij.modules.json</depends>-->
+    <depends optional="true" config-file="plugin-json.xml">com.intellij.modules.json</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <fileType

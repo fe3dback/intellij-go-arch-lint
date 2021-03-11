@@ -29,9 +29,7 @@ class GoArchSectionReferenceProvider(
 
         val firstMatch = itemsStream
             .filter { it.key!!.text == name }
-            .map {
-                PsiElementResolveResult(it)
-            }
+            .map { PsiElementResolveResult(it) }
             .findFirst()
 
         if (firstMatch.isEmpty) {
