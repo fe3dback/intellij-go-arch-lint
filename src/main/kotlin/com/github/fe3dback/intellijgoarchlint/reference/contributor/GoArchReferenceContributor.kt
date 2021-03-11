@@ -10,18 +10,18 @@ import com.intellij.psi.PsiReferenceRegistrar
 class GoArchReferenceContributor: PsiReferenceContributor() {
     override fun registerReferenceProviders(registrar: PsiReferenceRegistrar) {
         // commonComponents -> components
-        registrar.registerReferenceProvider(
-            GoArchPsiPattern.commonComponents(),
-            GoArchComponentNameReferenceProvider()
-        )
+//        registrar.registerReferenceProvider(
+//            GoArchPsiPattern.commonComponents(),
+//            GoArchComponentNameReferenceProvider()
+//        )
 
         // commonVendors -> vendors
-        registrar.registerReferenceProvider(
-            GoArchPsiPattern.commonVendors(),
-            GoArchVendorNameReferenceProvider()
-        )
-
-        // components
+//        registrar.registerReferenceProvider(
+//            GoArchPsiPattern.commonVendors(),
+//            GoArchVendorNameReferenceProvider()
+//        )
+//
+//        // components
         registrar.registerReferenceProvider(
             GoArchPsiPattern.componentNames(),
             GoArchComponentUsagesReferenceProvider()

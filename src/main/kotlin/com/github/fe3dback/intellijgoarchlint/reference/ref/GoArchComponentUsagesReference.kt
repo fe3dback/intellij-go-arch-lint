@@ -6,6 +6,7 @@ import com.github.fe3dback.intellijgoarchlint.psi.GoArchPsiUtils
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.*
 import com.intellij.util.containers.stream
+import org.jetbrains.yaml.psi.YAMLKeyValue
 import org.jetbrains.yaml.psi.YAMLPsiElement
 import java.util.stream.Stream
 
@@ -24,6 +25,10 @@ class GoArchComponentUsagesReference(
             .toArray()
     }
 
+    override fun isReferenceTo(element: PsiElement): Boolean {
+        return elementName(element) == name // todo: not sure its needed
+    }
+
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
         val itemsStream = streamByName(name, incompleteCode) ?: return emptyArray()
         var result = emptyArray<ResolveResult>()
@@ -36,25 +41,29 @@ class GoArchComponentUsagesReference(
 
     override fun resolve(): PsiElement? {
         val results = multiResolve(false)
-        if (results.isEmpty()) {
-            return null
+        if (results.count() == 1) {
+            return results.first().element
         }
 
-        return results.first().element
+        return null
     }
 
     private fun streamByName(name: String, incompleteCode: Boolean): Stream<YAMLPsiElement>? {
         val stream = stream() ?: return null
 
         if (incompleteCode) {
-            return stream.filter {
-                it.text.contains(name, true)
-            }
+            return stream.filter { elementName(it).contains(name, true) }
         }
 
-        return stream.filter {
-            it.text == name
+        return stream.filter { elementName(it) == name }
+    }
+
+    private fun elementName(element: PsiElement): String {
+        if (element is YAMLKeyValue) {
+            return element.keyText
         }
+
+        return element.text
     }
 
     private fun stream(): Stream<YAMLPsiElement>? {
@@ -69,7 +78,7 @@ class GoArchComponentUsagesReference(
                 .forEach { result = result.plus(it) }
         }
 
-        if (nodeCommonComponents != null) {
+        if (nodeDeps != null) {
             GoArchPsiUtils.getNodeKeyValuesStream(nodeDeps)
                 .filter { it.key != null }
                 .forEach { result = result.plus(it) }

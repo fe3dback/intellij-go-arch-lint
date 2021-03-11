@@ -30,7 +30,7 @@ class GoArchSectionReferenceProvider(
         val firstMatch = itemsStream
             .filter { it.key!!.text == name }
             .map {
-                PsiElementResolveResult(it.firstChild)
+                PsiElementResolveResult(it)
             }
             .findFirst()
 
@@ -43,9 +43,9 @@ class GoArchSectionReferenceProvider(
 
     private fun stream(): Stream<YAMLKeyValue>? {
         val mapping = GoArchPsiUtils.getTopLevelMapping(sourceElement) ?: return null
-        val componentNode = GoArchPsiUtils.getNodeByName(mapping, sectionName) ?: return null
-        val componentsStream = GoArchPsiUtils.getNodeKeyValuesStream(componentNode)
+        val node = GoArchPsiUtils.getNodeByName(mapping, sectionName) ?: return null
+        val elementsStream = GoArchPsiUtils.getNodeKeyValuesStream(node)
 
-        return componentsStream.filter { it.key != null }
+        return elementsStream.filter { it.key != null }
     }
 }
