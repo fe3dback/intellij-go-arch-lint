@@ -44,7 +44,7 @@ intellij {
     downloadSources = platformDownloadSources.toBoolean()
     updateSinceUntilBuild = true
 
-    setPlugins("org.jetbrains.plugins.yaml:202.6948.45")
+    setPlugins("org.jetbrains.plugins.yaml:211.6693.44")
 }
 
 // Configure detekt plugin.
