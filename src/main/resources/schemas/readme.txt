@@ -1,6 +1,6 @@
 do not edit json schemes here.
 
-All schemes should by exported from go-arch-lint binary:
+All schemes should be exported from go-arch-lint binary:
 
 example:
 $ go-arch-lint schema --version 1

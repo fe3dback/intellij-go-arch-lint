@@ -7,6 +7,8 @@ import com.intellij.psi.PsiElement
 import org.jetbrains.yaml.psi.*
 
 object GoArchPsiPattern {
+    fun version() = rootKeyValue(GoArch.specVersion)
+    fun excludeFiles() = sectionSequenceItems(GoArch.specExcludeFiles)
     fun componentDependencies() = sectionKeys(GoArch.specDeps)
     fun commonComponents() = sectionSequenceItems(GoArch.specCommonComponents)
     fun commonVendors() = sectionSequenceItems(GoArch.specCommonVendors)
@@ -24,23 +26,31 @@ object GoArchPsiPattern {
 
     private fun sectionKeys(sectionName: String): PsiElementPattern.Capture<YAMLKeyValue> {
         return abstractKeyValue()
-            .withSuperParent(2, section(sectionName))
+            .withSuperParent(2, rootKeyValue(sectionName))
     }
 
     private fun sectionSequenceItems(sectionName: String): PsiElementPattern.Capture<PsiElement> {
-        return sequenceItemsInsideKeyValue(section(sectionName))
+        return sequenceItemsInsideKeyValue(rootKeyValue(sectionName))
     }
 
     private fun sequenceItemsInsideKeyValue(keyValue: PsiElementPattern.Capture<YAMLKeyValue>): PsiElementPattern.Capture<PsiElement> {
         return PlatformPatterns.psiElement()
             .inside(
-                keyValue
+                sequenceItemOfKeyValue(keyValue)
             )
     }
 
-    private fun section(sectionName: String): PsiElementPattern.Capture<YAMLKeyValue> {
+    private fun sequenceItemOfKeyValue(keyValue: PsiElementPattern.Capture<YAMLKeyValue>): PsiElementPattern.Capture<YAMLSequenceItem> {
+        return PlatformPatterns.psiElement(YAMLSequenceItem::class.java)
+            .withParent(
+                PlatformPatterns.psiElement(YAMLSequence::class.java)
+                    .withParent(keyValue)
+            )
+    }
+
+    private fun rootKeyValue(sectionName: String): PsiElementPattern.Capture<YAMLKeyValue> {
         return keyValue(sectionName)
-            .inside(
+            .withParent(
                 topLevelMapping()
             )
     }
@@ -56,16 +66,9 @@ object GoArchPsiPattern {
         return PlatformPatterns.psiElement(YAMLKeyValue::class.java)
     }
 
-    private fun abstractMapping(): PsiElementPattern.Capture<YAMLMapping> {
-        return PlatformPatterns.psiElement(YAMLMapping::class.java)
-    }
-
     private fun topLevelMapping(): PsiElementPattern.Capture<YAMLMapping> =
-        abstractMapping()
-            .inside(
-                yamlDocument()
+        PlatformPatterns.psiElement(YAMLMapping::class.java)
+            .withParent(
+                PlatformPatterns.psiElement(YAMLDocument::class.java)
             )
-
-    private fun yamlDocument(): PsiElementPattern.Capture<YAMLDocument> =
-        PlatformPatterns.psiElement(YAMLDocument::class.java)
 }

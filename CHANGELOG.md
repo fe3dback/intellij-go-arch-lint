@@ -2,78 +2,11 @@
 
 # intellij-go-arch-lint Changelog
 
-## [Unreleased]
+## [0.7.0]
 ### Added
-
-### Changed
-
-### Deprecated
-
-### Removed
+- linter SDK: now IDE can run go-arch-lint itself and apply suggestions and notices to project in real-time
+- support of archfile v3 and all new features
+- support of newest goland IDE
 
 ### Fixed
-
-### Security
-## [0.1.0]
-### Added
-
-### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
-## [0.1.0]
-### Added
-
-### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
-## [0.1.0]
-### Added
-
-### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
-## [0.1.0]
-### Added
-
-### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
-## [0.0.1]
-### Added
-
-### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
-## [0.0.1]
-### Added
-- Initial scaffold created from [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
+- rare bug, when yaml component name collides with reserved section names

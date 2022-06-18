@@ -1,9 +1,12 @@
 <idea-plugin>
     <id>com.github.fe3dback.intellijgoarchlint</id>
     <name>GoArchLint File Support</name>
-    <version>0.6.3</version>
+    <version>0.7.0</version>
     <vendor url="https://github.com/fe3dback">fe3dback</vendor>
-    <description>Provides assistance for editing go arch YAML files.</description>
+    <description>
+        Provides assistance for editing go arch YAML files.
+        And checking project arch in real-time
+    </description>
 
     <depends>com.intellij.modules.platform</depends>
     <depends>org.jetbrains.plugins.yaml</depends>
@@ -19,6 +22,21 @@
         <psi.referenceContributor
             language="yaml"
             implementation="com.github.fe3dback.intellijgoarchlint.reference.contributor.GoArchReferenceContributor"
+        />
+
+        <languageInjectionContributor
+            language="yaml"
+            implementationClass="com.github.fe3dback.intellijgoarchlint.reference.regexp.GoArchRegexpInjector"
+        />
+
+        <annotator
+            language="yaml"
+            implementationClass="com.github.fe3dback.intellijgoarchlint.validate.annotator.GoArchVersionAnnotator"
+        />
+
+        <externalAnnotator
+            language="yaml"
+            implementationClass="com.github.fe3dback.intellijgoarchlint.validate.annotator.GoArchSelfInspectionAnnotator"
         />
 
     </extensions>

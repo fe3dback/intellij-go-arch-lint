@@ -113,7 +113,7 @@ object GoArchFileUtils {
             }
         }
 
-        return hasAllowTag && hasDependOnVendorTag || hasComponentsTag && hasDependenciesTag
+        return (hasAllowTag && hasDependOnVendorTag) || (hasComponentsTag && hasDependenciesTag)
     }
 
     private fun data(file: YAMLFile): GoArchFile {

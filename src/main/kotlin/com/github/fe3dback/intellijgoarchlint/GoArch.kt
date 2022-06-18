@@ -4,7 +4,7 @@ object GoArch {
     // version range
     // see src/main/resources/schemas
     const val versionMinimum = 1
-    const val versionMaximum = 2
+    const val versionMaximum = 3
 
     // top level
     const val specVersion = "version"
