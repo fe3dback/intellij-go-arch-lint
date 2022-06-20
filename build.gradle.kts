@@ -5,7 +5,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("java")
-    id("org.jetbrains.kotlin.jvm") version "1.4.0"
+    id("org.jetbrains.kotlin.jvm") version "1.6.0"
     id("org.jetbrains.intellij") version "0.4.21"
     id("org.jetbrains.changelog") version "0.4.0"
     id("io.gitlab.arturbosch.detekt") version "1.11.0"
@@ -48,7 +48,7 @@ intellij {
     downloadSources = platformDownloadSources.toBoolean()
     updateSinceUntilBuild = true
 
-    setPlugins("org.jetbrains.plugins.yaml:213.6461.19")
+    setPlugins("org.jetbrains.plugins.yaml:221.5591.46")
 }
 
 // Configure detekt plugin.

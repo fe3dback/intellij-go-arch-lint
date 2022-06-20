@@ -23,7 +23,7 @@ https://github.com/fe3dback/go-arch-lint
 
 Plugin should work in all jetbrains IDE's products.
 
-Tested on **GoLand 2020** and **IntelliJ IDEA Community**
+Tested on **GoLand 2020 - 2022.2** and **IntelliJ IDEA Community**
 
 <!-- Plugin description end -->
 

@@ -34,10 +34,12 @@
             implementationClass="com.github.fe3dback.intellijgoarchlint.validate.annotator.GoArchVersionAnnotator"
         />
 
-        <externalAnnotator
-            language="yaml"
-            implementationClass="com.github.fe3dback.intellijgoarchlint.validate.annotator.GoArchSelfInspectionAnnotator"
-        />
+<!-- Exp. feature -->
+<!-- need more stable docker run workflow and cache layer for config/files (modified date) -->
+<!--        <externalAnnotator-->
+<!--            language="yaml"-->
+<!--            implementationClass="com.github.fe3dback.intellijgoarchlint.validate.annotator.GoArchSelfInspectionAnnotator"-->
+<!--        />-->
 
     </extensions>
 </idea-plugin>
