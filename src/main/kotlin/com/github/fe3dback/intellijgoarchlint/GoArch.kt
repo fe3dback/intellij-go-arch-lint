@@ -19,10 +19,12 @@ object GoArch {
 
     // in allow
     const val specAllowDepOnAnyVendor = "depOnAnyVendor"
+    const val specAllowDeepScan = "deepScan" // since v3
 
     // in deps
     const val specDepsMayDependOn = "mayDependOn"
     const val specDepsCanUse = "canUse"
     const val specDepsAnyVendorDeps = "anyVendorDeps"
     const val specDepsAnyProjectDeps = "anyProjectDeps"
+    const val specDepsDeepScan = "deepScan" // since v3
 }
