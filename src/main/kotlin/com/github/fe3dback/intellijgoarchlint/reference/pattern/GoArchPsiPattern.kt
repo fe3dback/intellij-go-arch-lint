@@ -9,6 +9,8 @@ import org.jetbrains.yaml.psi.*
 object GoArchPsiPattern {
     fun version() = rootKeyValue(GoArch.specVersion)
     fun excludeFiles() = sectionSequenceItems(GoArch.specExcludeFiles)
+    fun components() = sectionKeys(GoArch.specComponents)
+    fun vendors() = sectionKeys(GoArch.specVendors)
     fun componentDependencies() = sectionKeys(GoArch.specDeps)
     fun commonComponents() = sectionSequenceItems(GoArch.specCommonComponents)
     fun commonVendors() = sectionSequenceItems(GoArch.specCommonVendors)

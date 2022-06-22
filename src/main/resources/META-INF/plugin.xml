@@ -34,6 +34,8 @@
             implementationClass="com.github.fe3dback.intellijgoarchlint.validate.annotator.GoArchVersionAnnotator"
         />
 
+        <highlightVisitor implementation="com.github.fe3dback.intellijgoarchlint.insight.GoArchRainbowVisitor" />
+
 <!-- Exp. feature -->
 <!-- need more stable docker run workflow and cache layer for config/files (modified date) -->
 <!--        <externalAnnotator-->
