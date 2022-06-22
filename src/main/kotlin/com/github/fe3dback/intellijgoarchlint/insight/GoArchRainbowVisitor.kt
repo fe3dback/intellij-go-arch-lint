@@ -41,9 +41,9 @@ class GoArchRainbowVisitor : RainbowVisitor() {
     }
 
     private fun isPossibleComponent(element: PsiElement): Boolean {
-        if (element is YAMLKeyValue) {
-            return true
-        }
+//        if (element is YAMLKeyValue) {
+//            return true
+//        }
 
         if (element is YAMLPlainTextImpl) {
             return true
@@ -65,17 +65,17 @@ class GoArchRainbowVisitor : RainbowVisitor() {
             return true
         }
 
-        if (GoArchPsiPattern.components().accepts(element)) {
-            return true
-        }
-
-        if (GoArchPsiPattern.vendors().accepts(element)) {
-            return true
-        }
-
-        if (GoArchPsiPattern.componentDependencies().accepts(element)) {
-            return true
-        }
+//        if (GoArchPsiPattern.components().accepts(element)) {
+//            return true
+//        }
+//
+//        if (GoArchPsiPattern.vendors().accepts(element)) {
+//            return true
+//        }
+//
+//        if (GoArchPsiPattern.componentDependencies().accepts(element)) {
+//            return true
+//        }
 
         if (GoArchPsiPattern.mayDependInDependencies().accepts(element)) {
             return true
