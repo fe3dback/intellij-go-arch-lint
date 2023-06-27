@@ -12,7 +12,6 @@ import org.jetbrains.yaml.psi.impl.YAMLPlainTextImpl
 
 class GoArchRainbowVisitor : RainbowVisitor() {
     override fun clone(): HighlightVisitor = GoArchRainbowVisitor()
-
     override fun suitableForFile(file: PsiFile): Boolean {
         return GoArchFileType.INSTANCE.isMyFileType(file.virtualFile)
     }

@@ -1,6 +1,10 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
 # intellij-go-arch-lint Changelog
+## [0.7.2]
+### Changed
+- support up to IDE version to 2023.1
+
 ## [0.7.1]
 ### Changed
 - up minimum support IDE version to 2021.3 
