@@ -36,6 +36,13 @@
 
         <highlightVisitor implementation="com.github.fe3dback.intellijgoarchlint.insight.GoArchRainbowVisitor" />
 
+        <projectConfigurable
+            id="preference.GoArchLintConfigurable"
+            groupId="tools"
+            displayName="Go Arch Lint"
+            instance="com.github.fe3dback.intellijgoarchlint.settings.PluginConfiguration"
+        />
+
 <!-- Exp. feature -->
 <!-- need more stable docker run workflow and cache layer for config/files (modified date) -->
 <!--        <externalAnnotator-->

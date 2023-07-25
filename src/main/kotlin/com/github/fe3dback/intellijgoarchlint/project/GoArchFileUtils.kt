@@ -1,14 +1,12 @@
 package com.github.fe3dback.intellijgoarchlint.project
 
 import com.github.fe3dback.intellijgoarchlint.GoArch
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.newvfs.impl.StubVirtualFile
 import org.jetbrains.yaml.YAMLUtil
 import org.jetbrains.yaml.psi.YAMLFile
 import java.io.IOException
-import java.lang.NumberFormatException
 import java.nio.charset.StandardCharsets
 import java.util.*
 
@@ -46,15 +44,14 @@ object GoArchFileUtils {
         }
 
         // in case of multiple go arch files, or for custom names,
-        // we want analyze yaml file for some patterns
+        // we want to analyze yaml file for some patterns
         return fileBytesMatchGoArchPattern(file)
     }
 
     private fun fileBytesMatchGoArchPattern(file: VirtualFile): Boolean {
         return ReadAction.compute<Boolean, Throwable> {
             try {
-                file.inputStream.use {
-                        inputStream ->
+                file.inputStream.use { inputStream ->
                     val bytes = ByteArray(VALIDATE_BYTES_TO_READ)
                     val n = inputStream.read(bytes, 0, VALIDATE_BYTES_TO_READ)
                     return@compute n > 0 && isGoArchYaml(bytes)

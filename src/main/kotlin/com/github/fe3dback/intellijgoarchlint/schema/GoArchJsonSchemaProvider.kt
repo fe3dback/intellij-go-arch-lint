@@ -10,9 +10,9 @@ import com.intellij.psi.PsiManager
 import com.jetbrains.jsonSchema.extension.JsonSchemaFileProvider
 import com.jetbrains.jsonSchema.extension.JsonSchemaProviderFactory
 import com.jetbrains.jsonSchema.extension.SchemaType
+import com.jetbrains.jsonSchema.ide.JsonSchemaService
 import com.jetbrains.jsonSchema.impl.JsonSchemaVersion
 import org.jetbrains.yaml.psi.YAMLFile
-import com.jetbrains.jsonSchema.ide.JsonSchemaService
 
 class GoArchJsonSchemaProvider(
     private val project: Project,

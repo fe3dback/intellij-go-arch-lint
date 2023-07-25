@@ -2,7 +2,9 @@ package com.github.fe3dback.intellijgoarchlint.psi
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
-import org.jetbrains.yaml.psi.*
+import org.jetbrains.yaml.psi.YAMLDocument
+import org.jetbrains.yaml.psi.YAMLKeyValue
+import org.jetbrains.yaml.psi.YAMLMapping
 import org.jetbrains.yaml.psi.impl.YAMLBlockMappingImpl
 import java.util.stream.Stream
 
@@ -10,17 +12,17 @@ object GoArchPsiUtils {
     fun getTopLevelMapping(psiElement: PsiElement): YAMLMapping? {
         val doc = PsiTreeUtil.getParentOfType(psiElement, YAMLDocument::class.java) ?: return null
         val topLevelValue = doc.topLevelValue
-        if (topLevelValue is YAMLMapping) {
-            return topLevelValue
+        if (topLevelValue !is YAMLMapping) {
+            return null
         }
 
-        return null
+        return topLevelValue
     }
 
-    fun getNodeByName(mapping : YAMLMapping, nodeName : String): YAMLKeyValue? {
+    fun getNodeByName(mapping: YAMLMapping, nodeName: String): YAMLKeyValue? {
         val result = mapping.keyValues.stream()
-                .filter { keyValue -> keyValue.keyText == nodeName }
-                .findFirst()
+            .filter { keyValue -> keyValue.keyText == nodeName }
+            .findFirst()
 
         if (result.isEmpty) {
             return null
