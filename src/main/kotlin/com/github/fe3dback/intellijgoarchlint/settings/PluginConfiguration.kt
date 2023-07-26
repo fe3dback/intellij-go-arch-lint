@@ -1,62 +1,125 @@
 package com.github.fe3dback.intellijgoarchlint.settings
 
+import com.github.fe3dback.intellijgoarchlint.GoArchLintInstallPath
 import com.intellij.openapi.options.BoundConfigurable
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.DialogPanel
-import com.intellij.ui.dsl.builder.bindText
-import com.intellij.ui.dsl.builder.panel
+import com.intellij.ui.components.JBCheckBox
+import com.intellij.ui.dsl.builder.*
+import com.intellij.ui.layout.selected
+import com.intellij.ui.layout.selectedValueIs
 
 class PluginConfiguration(val project: Project) : BoundConfigurable("Go Arch Lint"), SearchableConfigurable {
     private val storageState = project.goArchLintStorage.state
 
     override fun createPanel(): DialogPanel {
+        lateinit var uiEnableIntegrations: JBCheckBox
+        lateinit var uiExecutorTarget: ComboBox<ExecutorTarget>
+
         return panel {
             group {
+
                 group("Live integration with IDE") {
                     row {
-                        checkBox("Execute go-arch-lint in background?")
+                        uiEnableIntegrations = checkBox("Execute go-arch-lint in background?")
+                            .bindSelected(storageState::enableIntegrations)
+                            .component
                     }
                     row {
-                        comment("This will execute config validation, code linting, package mapping, etc.. in background and show results in IDE")
+                        comment("This will execute config validation, code linting,")
                     }
+                    row {
+                        comment("package mapping, etc.. in background and show results in IDE")
+                    }
+                }
+
+                group("Integration settings") {
+
+                    // ---------------------------
+                    // Target
+                    // ---------------------------
+
                     row {
                         text("Target:")
-                        dropDownLink("Host", arrayListOf("Docker", "Host"))
+                        uiExecutorTarget = comboBox(
+                            ExecutorTarget.values().toList()
+                        )
+                            .bindItem(storageState::executorTarget.toNullableProperty())
+                            .component
                         comment("Usually host faster than docker")
                     }
-                    group("Target: Docker settings") {
+
+                    // ---------------------------
+                    // DOCKER Settings
+                    // ---------------------------
+
+                    group("Docker") {
                         row {
                             text("Docker image:")
-                            dropDownLink("latest", arrayListOf("v1.10.0", "v1.11.0", "latest"))
+                            comboBox(
+                                LinterVersion.values().toList()
+                            )
+                                .align(Align.FILL)
+                                .bindItem(storageState::executorVersion.toNullableProperty())
                         }
                         row {
                             comment("What linter version will be used for checking?")
                             comment("Recommended: latest")
                         }
-                    }
-                    group("Target: Host settings") {
-                        row {
-                            text("Binary path:")
-                            textField().bindText(storageState::testStringField)
-                            comment("Abs file path to binary")
-                        }
-                        row {
-                            text("Install")
-                            dropDownLink("latest", arrayListOf("v1.10.0", "v1.11.0", "latest"))
-                            button("Download") {}
-                        }
+                    }.visibleIf(uiExecutorTarget.selectedValueIs(ExecutorTarget.DOCKER))
+
+                    // ---------------------------
+                    // HOST Settings
+                    // ---------------------------
+
+                    group("Host") {
                         row {
                             comment("You can download go-arch-lint from IDE, or install it manually")
                         }
-                    }
-                }
+                        row {
+                            text("Install")
+                            comboBox(
+                                LinterVersion.values().toList()
+                            )
+                                .align(Align.FILL)
+                                .bindItem(storageState::executorHostInstallVersion.toNullableProperty())
+                            button("Download") {}
+                        }
+                        row {
+                            comment("Linter will be installed to $GoArchLintInstallPath")
+                        }
+                        row {
+                            text("Binary path:")
+                        }
+                        row {
+                            button("Verify") {}
+                            textField()
+                                .align(Align.FILL)
+                                .bindText(storageState::executorHostBinaryPath)
+                        }
+                        row {
+                            comment("Abs file path to binary")
+                        }
+                    }.visibleIf(uiExecutorTarget.selectedValueIs(ExecutorTarget.HOST))
 
-                group("Integration Types") {
-                    row {
-                        checkBox("Validate config")
+                    // ---------------------------
+                    // Integrations
+                    // ---------------------------
+
+                    group("Active integrations") {
+                        row {
+                            checkBox("Validate config")
+                        }
+                        row {
+                            checkBox("Lint code")
+                        }
+                        row {
+                            checkBox("Show component mappings on packages")
+                        }
                     }
-                }
+                }.visibleIf(uiEnableIntegrations.selected)
             }
         }
     }

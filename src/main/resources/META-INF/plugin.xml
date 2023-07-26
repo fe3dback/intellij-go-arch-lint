@@ -16,25 +16,20 @@
         <fileType
                 name="YAML_GO_ARCH"
                 language="yaml"
-                implementationClass="com.github.fe3dback.intellijgoarchlint.file.GoArchFileType"
+                implementationClass="com.github.fe3dback.intellijgoarchlint.config.file.GoArchFileType"
         />
 
         <psi.referenceContributor
             language="yaml"
-            implementation="com.github.fe3dback.intellijgoarchlint.reference.contributor.GoArchReferenceContributor"
+            implementation="com.github.fe3dback.intellijgoarchlint.config.reference.contributor.GoArchReferenceContributor"
         />
 
         <languageInjectionContributor
             language="yaml"
-            implementationClass="com.github.fe3dback.intellijgoarchlint.reference.regexp.GoArchRegexpInjector"
+            implementationClass="com.github.fe3dback.intellijgoarchlint.config.reference.regexp.GoArchRegexpInjector"
         />
 
-        <annotator
-            language="yaml"
-            implementationClass="com.github.fe3dback.intellijgoarchlint.validate.annotator.GoArchVersionAnnotator"
-        />
-
-        <highlightVisitor implementation="com.github.fe3dback.intellijgoarchlint.insight.GoArchRainbowVisitor" />
+        <highlightVisitor implementation="com.github.fe3dback.intellijgoarchlint.config.semantic.HighlightVisitor" />
 
         <projectConfigurable
             id="preference.GoArchLintConfigurable"
@@ -43,12 +38,15 @@
             instance="com.github.fe3dback.intellijgoarchlint.settings.PluginConfiguration"
         />
 
-<!-- Exp. feature -->
-<!-- need more stable docker run workflow and cache layer for config/files (modified date) -->
-<!--        <externalAnnotator-->
-<!--            language="yaml"-->
-<!--            implementationClass="com.github.fe3dback.intellijgoarchlint.validate.annotator.GoArchSelfInspectionAnnotator"-->
-<!--        />-->
+        <annotator
+            language="yaml"
+            implementationClass="com.github.fe3dback.intellijgoarchlint.config.annotations.VersionAnnotator"
+        />
+
+        <externalAnnotator
+            language="yaml"
+            implementationClass="com.github.fe3dback.intellijgoarchlint.config.annotations.ExternalAnnotator"
+        />
 
     </extensions>
 </idea-plugin>
