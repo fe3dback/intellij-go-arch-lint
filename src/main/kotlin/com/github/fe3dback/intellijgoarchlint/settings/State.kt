@@ -22,4 +22,7 @@ data class State(
     var executorVersion: LinterVersion = LinterVersion.latest,
     var executorHostBinaryPath: String = GoArchLintInstallPath,
     var executorHostInstallVersion: LinterVersion = LinterVersion.latest,
+
+    var enableSubSelfInspections: Boolean = true,
+    var enableSubCodeInspections: Boolean = true,
 )

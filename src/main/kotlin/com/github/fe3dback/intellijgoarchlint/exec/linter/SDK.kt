@@ -3,6 +3,7 @@ package com.github.fe3dback.intellijgoarchlint.exec.linter
 import com.github.fe3dback.intellijgoarchlint.exec.DockerParamsFactory
 import com.github.fe3dback.intellijgoarchlint.exec.DockerRunParams
 import com.github.fe3dback.intellijgoarchlint.exec.ExecutorProvider
+import com.github.fe3dback.intellijgoarchlint.models.linter.SelfInspectOut
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.intellij.openapi.diagnostic.Logger
@@ -17,8 +18,8 @@ private const val linterImageTag = "dev-1.7.0-rc2"
 class SDK(private val context: Context) {
     private val logger: Logger = Logger.getInstance(SDK::class.java)
 
-    fun selfInspect(): Inspection? {
-        return parseInto(Inspection::class.java, stdoutOfExecution(prepareCommand(commandSelfInspect)))
+    fun selfInspect(): SelfInspectOut? {
+        return parseInto(SelfInspectOut::class.java, stdoutOfExecution(prepareCommand(commandSelfInspect)))
     }
 
     fun mapping(): Mapping? {

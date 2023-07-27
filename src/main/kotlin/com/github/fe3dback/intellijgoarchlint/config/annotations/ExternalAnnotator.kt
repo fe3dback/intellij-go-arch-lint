@@ -1,8 +1,10 @@
 package com.github.fe3dback.intellijgoarchlint.config.annotations
 
+import com.github.fe3dback.intellijgoarchlint.integration.sdk.Provider
 import com.github.fe3dback.intellijgoarchlint.models.Annotation
-import com.github.fe3dback.intellijgoarchlint.models.Reference
+import com.github.fe3dback.intellijgoarchlint.models.Context
 import com.github.fe3dback.intellijgoarchlint.project.GoArchFileUtils
+import com.github.fe3dback.intellijgoarchlint.settings.goArchLintStorage
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.ExternalAnnotator
 import com.intellij.lang.annotation.HighlightSeverity
@@ -15,6 +17,8 @@ class ExternalAnnotator : ExternalAnnotator<LintContext, LintResult>() {
     override fun collectInformation(file: PsiFile, editor: Editor, hasErrors: Boolean): LintContext? {
         if (hasErrors) return null
         if (!GoArchFileUtils.isValid(file.virtualFile)) return null
+        if (!file.project.goArchLintStorage.state.enableIntegrations) return null
+        if (!file.project.goArchLintStorage.state.enableSubSelfInspections) return null
 
         return LintContext(editor, file.virtualFile)
     }
@@ -24,23 +28,16 @@ class ExternalAnnotator : ExternalAnnotator<LintContext, LintResult>() {
             return null
         }
 
+
+        val sdk = Provider().archSDK
         return LintResult(
-            collectedInfo.editor,
-            arrayListOf(
-                Annotation(
-                    "Hello world",
-                    Reference(true, "", 10, 4)
+            collectedInfo.editor, sdk.configIssues(
+                Context(
+                    collectedInfo.virtualFile.parent.path,
+                    collectedInfo.virtualFile.name,
                 )
             )
         )
-
-//        val sdk = SDK(contextFromArchFile(collectedInfo.virtualFile))
-//        val result = sdk.selfInspect() ?: return null
-//
-//        return LintResult(
-//            context.editor,
-//            result.Payload.Notices
-//        )
     }
 
     override fun apply(
@@ -60,17 +57,17 @@ class ExternalAnnotator : ExternalAnnotator<LintContext, LintResult>() {
         holder: AnnotationHolder
     ) {
         if (!it.reference.valid) return
-        
+
         val startOffset = DocumentUtil.calculateOffset(
             annotationResult.editor.document,
             it.reference.line - 1,
-            0,
+            it.reference.offset - 1,
             1
         )
         val endOffset = DocumentUtil.calculateOffset(
             annotationResult.editor.document,
             it.reference.line - 1,
-            it.reference.offset - 1,
+            it.reference.offset + 100,
             1
         )
 

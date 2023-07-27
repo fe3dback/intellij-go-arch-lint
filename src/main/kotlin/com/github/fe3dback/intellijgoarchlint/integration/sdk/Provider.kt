@@ -1,11 +1,14 @@
 package com.github.fe3dback.intellijgoarchlint.integration.sdk
 
 import com.github.fe3dback.intellijgoarchlint.integration.GoArchSDK
+import com.github.fe3dback.intellijgoarchlint.integration.executor.HostExecutor
 
 class Provider {
-    val LinterSDK: GoArchSDK = provideSDK()
+    val archSDK: GoArchSDK = provideSDK()
 
     private fun provideSDK(): GoArchSDK {
-        return SDK()
+        return SDK(
+            HostExecutor()
+        )
     }
 }
