@@ -1,10 +1,10 @@
 package com.github.fe3dback.intellijgoarchlint.config.annotations
 
-import com.github.fe3dback.intellijgoarchlint.integration.sdk.Provider
+import com.github.fe3dback.intellijgoarchlint.cmp.integration.sdk.SDKProvider
 import com.github.fe3dback.intellijgoarchlint.models.Annotation
 import com.github.fe3dback.intellijgoarchlint.models.Context
 import com.github.fe3dback.intellijgoarchlint.project.GoArchFileUtils
-import com.github.fe3dback.intellijgoarchlint.settings.goArchLintStorage
+import com.github.fe3dback.intellijgoarchlint.settings.Features
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.ExternalAnnotator
 import com.intellij.lang.annotation.HighlightSeverity
@@ -17,10 +17,9 @@ class ExternalAnnotator : ExternalAnnotator<LintContext, LintResult>() {
     override fun collectInformation(file: PsiFile, editor: Editor, hasErrors: Boolean): LintContext? {
         if (hasErrors) return null
         if (!GoArchFileUtils.isValid(file.virtualFile)) return null
-        if (!file.project.goArchLintStorage.state.enableIntegrations) return null
-        if (!file.project.goArchLintStorage.state.enableSubSelfInspections) return null
+        if (!Features.isConfigLintEnabled(file.project)) return null
 
-        return LintContext(editor, file.virtualFile)
+        return LintContext(editor, file)
     }
 
     override fun doAnnotate(collectedInfo: LintContext?): LintResult? {
@@ -28,13 +27,13 @@ class ExternalAnnotator : ExternalAnnotator<LintContext, LintResult>() {
             return null
         }
 
-
-        val sdk = Provider().archSDK
+        val sdk = SDKProvider.goArchLintSDK()
         return LintResult(
             collectedInfo.editor, sdk.configIssues(
                 Context(
-                    collectedInfo.virtualFile.parent.path,
-                    collectedInfo.virtualFile.name,
+                    collectedInfo.configPsiFile.project,
+                    collectedInfo.configPsiFile.virtualFile.parent.path,
+                    collectedInfo.configPsiFile.virtualFile.name,
                 )
             )
         )

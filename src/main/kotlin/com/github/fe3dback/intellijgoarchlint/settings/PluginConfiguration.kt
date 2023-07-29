@@ -1,22 +1,27 @@
 package com.github.fe3dback.intellijgoarchlint.settings
 
 import com.github.fe3dback.intellijgoarchlint.GoArchLintInstallPath
+import com.github.fe3dback.intellijgoarchlint.cmp.integration.installer.ArchLintInstaller
+import com.github.fe3dback.intellijgoarchlint.config.file.GoArchIcons
 import com.intellij.openapi.options.BoundConfigurable
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.dsl.builder.*
 import com.intellij.ui.layout.selected
-import com.intellij.ui.layout.selectedValueIs
 
 class PluginConfiguration(val project: Project) : BoundConfigurable("Go Arch Lint"), SearchableConfigurable {
     private val storageState = project.goArchLintStorage.state
 
     override fun createPanel(): DialogPanel {
         lateinit var uiEnableIntegrations: JBCheckBox
-        lateinit var uiExecutorTarget: ComboBox<ExecutorTarget>
+        // lateinit var uiExecutorTarget: ComboBox<ExecutorTarget>
+
+        val whenHostVerified = PropertyPredicate { storageState.executorHostVerified }
+        val whenHostNotVerified = PropertyPredicate { !whenHostVerified() }
+        val whenSupportedOS = PropertyPredicate { Features.isExecutorAvailable() }
+        val whenNotSupportedOS = PropertyPredicate { !whenSupportedOS() }
 
         return panel {
             group {
@@ -40,35 +45,37 @@ class PluginConfiguration(val project: Project) : BoundConfigurable("Go Arch Lin
                     // ---------------------------
                     // Target
                     // ---------------------------
+                    // todo: docker
 
-                    row {
-                        text("Target:")
-                        uiExecutorTarget = comboBox(
-                            ExecutorTarget.values().toList()
-                        )
-                            .bindItem(storageState::executorTarget.toNullableProperty())
-                            .component
-                        comment("Usually host faster than docker")
-                    }
+//                    row {
+//                        text("Target:")
+//                        uiExecutorTarget = comboBox(
+//                            ExecutorTarget.values().toList()
+//                        )
+//                            .bindItem(storageState::executorTarget.toNullableProperty())
+//                            .component
+//                        comment("Usually host faster than docker")
+//                    }
 
                     // ---------------------------
                     // DOCKER Settings
                     // ---------------------------
+                    // todo: docker
 
-                    group("Docker") {
-                        row {
-                            text("Docker image:")
-                            comboBox(
-                                LinterVersion.values().toList()
-                            )
-                                .align(Align.FILL)
-                                .bindItem(storageState::executorVersion.toNullableProperty())
-                        }
-                        row {
-                            comment("What linter version will be used for checking?")
-                            comment("Recommended: latest")
-                        }
-                    }.visibleIf(uiExecutorTarget.selectedValueIs(ExecutorTarget.DOCKER))
+//                    group("Docker") {
+//                        row {
+//                            text("Docker image:")
+//                            comboBox(
+//                                LinterVersion.values().toList()
+//                            )
+//                                .align(Align.FILL)
+//                                .bindItem(storageState::executorDockerVersion.toNullableProperty())
+//                        }
+//                        row {
+//                            comment("What linter version will be used for checking?")
+//                            comment("Recommended: latest")
+//                        }
+//                    }.visibleIf(uiExecutorTarget.selectedValueIs(ExecutorTarget.DOCKER))
 
                     // ---------------------------
                     // HOST Settings
@@ -85,7 +92,9 @@ class PluginConfiguration(val project: Project) : BoundConfigurable("Go Arch Lin
                             )
                                 .align(Align.FILL)
                                 .bindItem(storageState::executorHostInstallVersion.toNullableProperty())
-                            button("Download") {}
+                            button("Download") {
+                                ArchLintInstaller.installBinary(project, storageState.executorHostInstallVersion)
+                            }
                         }
                         row {
                             comment("Linter will be installed to $GoArchLintInstallPath")
@@ -93,16 +102,34 @@ class PluginConfiguration(val project: Project) : BoundConfigurable("Go Arch Lin
                         row {
                             text("Binary path:")
                         }
+
                         row {
-                            button("Verify") {}
+                            button("Verify") { project.goArchLintStorage.verifyHostBinary() }
                             textField()
                                 .align(Align.FILL)
-                                .bindText(storageState::executorHostBinaryPath)
+                                .bindText(storageState::executorHostTmpBinaryPath)
                         }
+
+                        row {
+                            icon(GoArchIcons.FILETYPE_ICON)
+                            text("Linter: ${storageState.executorHostVerified}")
+                                .bold()
+                            text("Version: ${storageState.executorHostVerifiedVersion}")
+                                .bold()
+                        }.visibleIf(whenHostVerified)
+                        row {
+                            text("Press 'Verify' to apply and check selected linter")
+                                .bold()
+                        }.visibleIf(whenHostNotVerified)
+
                         row {
                             comment("Abs file path to binary")
                         }
-                    }.visibleIf(uiExecutorTarget.selectedValueIs(ExecutorTarget.HOST))
+                    }//.visibleIf(uiExecutorTarget.selectedValueIs(ExecutorTarget.HOST)) // todo: on after docker
+
+                    row {
+                        comment("Note: External linter will not be executed if current project is untrusted")
+                    }
 
                     // ---------------------------
                     // Integrations
@@ -120,7 +147,13 @@ class PluginConfiguration(val project: Project) : BoundConfigurable("Go Arch Lin
                         }
                     }
                 }.visibleIf(uiEnableIntegrations.selected)
-            }
+            }.visibleIf(whenSupportedOS)
+
+            group {
+                row {
+                    comment("Currently advanced linter integration supported only on Unix like OS")
+                }
+            }.visibleIf(whenNotSupportedOS)
         }
     }
 
@@ -135,4 +168,5 @@ class PluginConfiguration(val project: Project) : BoundConfigurable("Go Arch Lin
         super.apply()
         project.goArchLintStorage.state = storageState
     }
+
 }

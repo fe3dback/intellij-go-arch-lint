@@ -1,6 +1,8 @@
 package com.github.fe3dback.intellijgoarchlint.settings
 
 import com.github.fe3dback.intellijgoarchlint.GoArchLintInstallPath
+import com.github.fe3dback.intellijgoarchlint.models.Version
+import com.github.fe3dback.intellijgoarchlint.models.invalidVersionFrom
 
 enum class ExecutorTarget {
     HOST,
@@ -17,12 +19,18 @@ enum class LinterVersion {
 
 data class State(
     // enable all other advanced integrations between go-arch-lint and IDE
-    var enableIntegrations: Boolean = true,
+    var enableIntegrations: Boolean = false,
     var executorTarget: ExecutorTarget = ExecutorTarget.HOST,
-    var executorVersion: LinterVersion = LinterVersion.latest,
-    var executorHostBinaryPath: String = GoArchLintInstallPath,
+
+    var executorDockerVerified: Boolean = false, // todo
+    var executorDockerVersion: LinterVersion = LinterVersion.latest, // todo
+
+    var executorHostVerified: Boolean = false,
+    var executorHostVerifiedVersion: Version = invalidVersionFrom("?"),
+    var executorHostVerifiedBinaryPath: String = "",
+    var executorHostTmpBinaryPath: String = GoArchLintInstallPath,
     var executorHostInstallVersion: LinterVersion = LinterVersion.latest,
 
-    var enableSubSelfInspections: Boolean = true,
-    var enableSubCodeInspections: Boolean = true,
+    var enableSubSelfInspections: Boolean = true, // todo
+    var enableSubCodeInspections: Boolean = true, // todo
 )

@@ -12,6 +12,20 @@
     <depends>org.jetbrains.plugins.yaml</depends>
     <depends optional="true" config-file="plugin-json.xml">com.intellij.modules.json</depends>
 
+    <!-- ideas/todo/roadmap
+        - "download binary" button will show progress bar with label (XX MB / YY MB) (like in gradle ide downloader)
+
+        - label with count matched files in config. Label click will open "find usages" with list of go packages
+        - component icon near of "go package" declaration in go code. Click on icon redirect to component defenition
+        - config lint
+        - code lint
+        - docker image runner
+        - show lint progress in top/right corner of openned file
+        - verify button in settings (for host/docker target). Show hostpath with green outlines when available
+        - - confirm button should run "version" command and print it near path
+        - fix goto usages in config (replace json schema redirect to custom redirect)
+    -->
+
     <extensions defaultExtensionNs="com.intellij">
         <fileType
                 name="YAML_GO_ARCH"
@@ -47,6 +61,10 @@
             language="yaml"
             implementationClass="com.github.fe3dback.intellijgoarchlint.config.annotations.ExternalAnnotator"
         />
+
+        <!-- Notifications -->
+        <notificationGroup id="Go-Arch-Lint MissConfiguration" displayType="BALLOON" bundle="messages.MyBundle" key="notification.group.goarchlint.plugin"/>
+        <notificationGroup id="Go-Arch-Lint Untrusted" displayType="BALLOON" bundle="messages.MyBundle" key="notification.group.goarchlint.plugin"/>
 
     </extensions>
 </idea-plugin>
