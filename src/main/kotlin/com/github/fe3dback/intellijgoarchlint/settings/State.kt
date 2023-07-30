@@ -6,10 +6,10 @@ import com.github.fe3dback.intellijgoarchlint.models.invalidVersionFrom
 
 enum class ExecutorTarget {
     HOST,
-    DOCKER,
+    DOCKER, // todo
 }
 
-enum class LinterVersion {
+enum class LinterVersion { // todo: install
     v1_08,
     v1_09,
     v1_10,
@@ -18,19 +18,15 @@ enum class LinterVersion {
 }
 
 data class State(
+    var allowShowingInstallPopup: Boolean = true,
+
     // enable all other advanced integrations between go-arch-lint and IDE
-    var enableIntegrations: Boolean = false,
+    var enableIntegrations: Boolean = true,
     var executorTarget: ExecutorTarget = ExecutorTarget.HOST,
 
-    var executorDockerVerified: Boolean = false, // todo
-    var executorDockerVersion: LinterVersion = LinterVersion.latest, // todo
-
-    var executorHostVerified: Boolean = false,
     var executorHostVerifiedVersion: Version = invalidVersionFrom("?"),
     var executorHostVerifiedBinaryPath: String = "",
     var executorHostTmpBinaryPath: String = GoArchLintInstallPath,
-    var executorHostInstallVersion: LinterVersion = LinterVersion.latest,
 
-    var enableSubSelfInspections: Boolean = true, // todo
-    var enableSubCodeInspections: Boolean = true, // todo
+    var enableSubSelfInspections: Boolean = true,
 )

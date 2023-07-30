@@ -1,8 +1,10 @@
 package com.github.fe3dback.intellijgoarchlint.settings
 
-import com.github.fe3dback.intellijgoarchlint.GoArchLintInstallPath
-import com.github.fe3dback.intellijgoarchlint.cmp.integration.installer.ArchLintInstaller
 import com.github.fe3dback.intellijgoarchlint.config.file.GoArchIcons
+import com.intellij.icons.AllIcons
+import com.intellij.ide.impl.isTrusted
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
+import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.options.BoundConfigurable
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.project.Project
@@ -10,18 +12,19 @@ import com.intellij.openapi.ui.DialogPanel
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.dsl.builder.*
 import com.intellij.ui.layout.selected
+import java.awt.datatransfer.StringSelection
+import javax.swing.JEditorPane
 
 class PluginConfiguration(val project: Project) : BoundConfigurable("Go Arch Lint"), SearchableConfigurable {
-    private val storageState = project.goArchLintStorage.state
+    private val storage = project.goArchLintStorage
+    private val storageState = storage.state
+    private var asyncModified = false
 
     override fun createPanel(): DialogPanel {
         lateinit var uiEnableIntegrations: JBCheckBox
-        // lateinit var uiExecutorTarget: ComboBox<ExecutorTarget>
-
-        val whenHostVerified = PropertyPredicate { storageState.executorHostVerified }
-        val whenHostNotVerified = PropertyPredicate { !whenHostVerified() }
-        val whenSupportedOS = PropertyPredicate { Features.isExecutorAvailable() }
-        val whenNotSupportedOS = PropertyPredicate { !whenSupportedOS() }
+        lateinit var uiLinterHostVerifySuccessRow: Row
+        lateinit var uiLinterHostVerifyFailRow: Row
+        lateinit var uiLinterHostVerifyVersion: Cell<JEditorPane>
 
         return panel {
             group {
@@ -38,128 +41,137 @@ class PluginConfiguration(val project: Project) : BoundConfigurable("Go Arch Lin
                     row {
                         comment("package mapping, etc.. in background and show results in IDE")
                     }
-                }
-
-                group("Integration settings") {
-
-                    // ---------------------------
-                    // Target
-                    // ---------------------------
-                    // todo: docker
-
-//                    row {
-//                        text("Target:")
-//                        uiExecutorTarget = comboBox(
-//                            ExecutorTarget.values().toList()
-//                        )
-//                            .bindItem(storageState::executorTarget.toNullableProperty())
-//                            .component
-//                        comment("Usually host faster than docker")
-//                    }
-
-                    // ---------------------------
-                    // DOCKER Settings
-                    // ---------------------------
-                    // todo: docker
-
-//                    group("Docker") {
-//                        row {
-//                            text("Docker image:")
-//                            comboBox(
-//                                LinterVersion.values().toList()
-//                            )
-//                                .align(Align.FILL)
-//                                .bindItem(storageState::executorDockerVersion.toNullableProperty())
-//                        }
-//                        row {
-//                            comment("What linter version will be used for checking?")
-//                            comment("Recommended: latest")
-//                        }
-//                    }.visibleIf(uiExecutorTarget.selectedValueIs(ExecutorTarget.DOCKER))
-
-                    // ---------------------------
-                    // HOST Settings
-                    // ---------------------------
-
-                    group("Host") {
-                        row {
-                            comment("You can download go-arch-lint from IDE, or install it manually")
-                        }
-                        row {
-                            text("Install")
-                            comboBox(
-                                LinterVersion.values().toList()
-                            )
-                                .align(Align.FILL)
-                                .bindItem(storageState::executorHostInstallVersion.toNullableProperty())
-                            button("Download") {
-                                ArchLintInstaller.installBinary(project, storageState.executorHostInstallVersion)
-                            }
-                        }
-                        row {
-                            comment("Linter will be installed to $GoArchLintInstallPath")
-                        }
-                        row {
-                            text("Binary path:")
-                        }
-
-                        row {
-                            button("Verify") { project.goArchLintStorage.verifyHostBinary() }
-                            textField()
-                                .align(Align.FILL)
-                                .bindText(storageState::executorHostTmpBinaryPath)
-                        }
-
-                        row {
-                            icon(GoArchIcons.FILETYPE_ICON)
-                            text("Linter: ${storageState.executorHostVerified}")
-                                .bold()
-                            text("Version: ${storageState.executorHostVerifiedVersion}")
-                                .bold()
-                        }.visibleIf(whenHostVerified)
-                        row {
-                            text("Press 'Verify' to apply and check selected linter")
-                                .bold()
-                        }.visibleIf(whenHostNotVerified)
-
-                        row {
-                            comment("Abs file path to binary")
-                        }
-                    }//.visibleIf(uiExecutorTarget.selectedValueIs(ExecutorTarget.HOST)) // todo: on after docker
 
                     row {
-                        comment("Note: External linter will not be executed if current project is untrusted")
+                        icon(AllIcons.General.Warning)
+                        comment("External integrations will not be used, because project is untrusted").bold()
+                    }.visible(!project.isTrusted())
+                }
+
+                group("Linter") {
+
+                    // ---------------------------
+                    // HOST: Choose
+                    // ---------------------------
+
+                    group("Choose") {
+                        row {
+                            text("Path to go-arch-lint:")
+                        }
+                        row {
+                            textFieldWithBrowseButton(
+                                "Specify path to go-arch-lint binary",
+                                project,
+                                FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor(),
+                            )
+                                .align(Align.FILL)
+                                .text(storageState.executorHostVerifiedBinaryPath)
+                                .onReset {
+                                    this.text(storageState.executorHostVerifiedBinaryPath)
+                                }
+                                .onChanged {
+                                    val path = it.textField.text
+                                    if (path === null) return@onChanged
+
+                                    if (path == storageState.executorHostVerifiedBinaryPath) {
+                                        return@onChanged
+                                    }
+
+                                    // drop last state
+                                    asyncModified = true
+                                    uiLinterHostVerifyFailRow.visible(true)
+                                    uiLinterHostVerifySuccessRow.visible(false)
+                                    uiLinterHostVerifyVersion.text("?")
+
+                                    // verify linter and update ui
+                                    storage.chooseLinterHostPath(path) {
+                                        uiLinterHostVerifyFailRow.visible(false)
+                                        uiLinterHostVerifySuccessRow.visible(true)
+                                        uiLinterHostVerifyVersion.text("Linter Version: ${storageState.executorHostVerifiedVersion}")
+                                    }
+                                }
+                        }
+
+                        uiLinterHostVerifySuccessRow = row {
+                            icon(GoArchIcons.FILETYPE_ICON)
+                            uiLinterHostVerifyVersion =
+                                text("Linter Version: ${storageState.executorHostVerifiedVersion}")
+                                    .bold()
+                        }.visible(storageState.executorHostVerifiedVersion.valid)
+
+                        uiLinterHostVerifyFailRow = row {
+                            icon(AllIcons.General.Warning)
+                            text("No linter is used right now")
+                        }.visible(!storageState.executorHostVerifiedVersion.valid)
                     }
 
                     // ---------------------------
-                    // Integrations
+                    // HOST: Setup
                     // ---------------------------
 
-                    group("Active integrations") {
+                    group("Setup") {
                         row {
-                            checkBox("Validate config")
+                            button("Copy") {
+                                CopyPasteManager.getInstance().setContents(
+                                    StringSelection(
+                                        "go install github.com/fe3dback/go-arch-lint@latest"
+                                    )
+                                )
+                            }
+                            textField()
+                                .text("go install github.com/fe3dback/go-arch-lint@latest")
+                                .align(Align.FILL)
+                                .enabled(false)
                         }
                         row {
-                            checkBox("Lint code")
+                            browserLink(
+                                "or download from project page",
+                                "https://github.com/fe3dback/go-arch-lint/releases"
+                            )
                         }
                         row {
-                            checkBox("Show component mappings on packages")
+                            comment("Currently only manual install is possible")
                         }
+                    }
+
+                }.visibleIf(uiEnableIntegrations.selected)
+
+                // ---------------------------
+                // Integrations
+                // ---------------------------
+
+                group("Active integrations") {
+                    row {
+                        checkBox("Validate config").bindSelected(storageState::enableSubSelfInspections)
+                    }
+                    row {
+                        checkBox("Lint code").enabled(false)
+                        comment("(todo)")
+                    }
+                    row {
+                        checkBox("Show component mappings on packages").enabled(false)
+                        comment("(todo)")
                     }
                 }.visibleIf(uiEnableIntegrations.selected)
-            }.visibleIf(whenSupportedOS)
+
+            }.visible(Features.isExecutorAvailable())
 
             group {
                 row {
                     comment("Currently advanced linter integration supported only on Unix like OS")
                 }
-            }.visibleIf(whenNotSupportedOS)
+            }.visible(!Features.isExecutorAvailable())
         }
     }
 
     override fun getId(): String = "com.github.fe3dback.go-arch-lint.settings"
 
     override fun isModified(): Boolean {
+        if (asyncModified) {
+            asyncModified = false
+            return true
+        }
+
         if (super<BoundConfigurable>.isModified()) return true
         return project.goArchLintStorage.state != storageState
     }
