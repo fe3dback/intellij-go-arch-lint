@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.github.fe3dback.intellijgoarchlint</id>
     <name>GoArchLint File Support</name>
-    <version>0.7.2</version>
+    <version>0.8.0</version>
     <vendor url="https://github.com/fe3dback">fe3dback</vendor>
     <description>
         Provides assistance for editing go arch YAML files.
@@ -12,36 +12,54 @@
     <depends>org.jetbrains.plugins.yaml</depends>
     <depends optional="true" config-file="plugin-json.xml">com.intellij.modules.json</depends>
 
+    <!-- ideas/todo/roadmap
+        - label with count matched files in config. Label click will open "find usages" with list of go packages
+        - component icon near of "go package" declaration in go code. Click on icon redirect to component definition?
+        - code lint
+        - docker image runner
+        - show lint progress in top/right corner of opened file
+    -->
+
     <extensions defaultExtensionNs="com.intellij">
         <fileType
                 name="YAML_GO_ARCH"
                 language="yaml"
-                implementationClass="com.github.fe3dback.intellijgoarchlint.file.GoArchFileType"
+                implementationClass="com.github.fe3dback.intellijgoarchlint.config.file.GoArchFileType"
         />
 
         <psi.referenceContributor
             language="yaml"
-            implementation="com.github.fe3dback.intellijgoarchlint.reference.contributor.GoArchReferenceContributor"
+            implementation="com.github.fe3dback.intellijgoarchlint.config.reference.contributor.GoArchReferenceContributor"
         />
 
         <languageInjectionContributor
             language="yaml"
-            implementationClass="com.github.fe3dback.intellijgoarchlint.reference.regexp.GoArchRegexpInjector"
+            implementationClass="com.github.fe3dback.intellijgoarchlint.config.reference.regexp.GoArchRegexpInjector"
+        />
+
+        <highlightVisitor implementation="com.github.fe3dback.intellijgoarchlint.config.semantic.HighlightVisitor" />
+
+        <projectConfigurable
+            id="preference.GoArchLintConfigurable"
+            groupId="tools"
+            displayName="Go Arch Lint"
+            instance="com.github.fe3dback.intellijgoarchlint.settings.PluginConfiguration"
         />
 
         <annotator
             language="yaml"
-            implementationClass="com.github.fe3dback.intellijgoarchlint.validate.annotator.GoArchVersionAnnotator"
+            implementationClass="com.github.fe3dback.intellijgoarchlint.config.annotations.VersionAnnotator"
         />
 
-        <highlightVisitor implementation="com.github.fe3dback.intellijgoarchlint.insight.GoArchRainbowVisitor" />
+        <externalAnnotator
+            language="yaml"
+            implementationClass="com.github.fe3dback.intellijgoarchlint.config.annotations.ExternalAnnotator"
+        />
 
-<!-- Exp. feature -->
-<!-- need more stable docker run workflow and cache layer for config/files (modified date) -->
-<!--        <externalAnnotator-->
-<!--            language="yaml"-->
-<!--            implementationClass="com.github.fe3dback.intellijgoarchlint.validate.annotator.GoArchSelfInspectionAnnotator"-->
-<!--        />-->
+        <!-- Notifications -->
+        <postStartupActivity implementation="com.github.fe3dback.intellijgoarchlint.settings.startup.ConfigurationCheck" order="last"/>
+        <notificationGroup id="Go-Arch-Lint MissConfiguration" displayType="BALLOON" bundle="messages.MyBundle" key="notification.group.goarchlint.configure"/>
+        <notificationGroup id="Go-Arch-Lint Untrusted" displayType="BALLOON" bundle="messages.MyBundle" key="notification.group.goarchlint.untrusted"/>
 
     </extensions>
 </idea-plugin>
