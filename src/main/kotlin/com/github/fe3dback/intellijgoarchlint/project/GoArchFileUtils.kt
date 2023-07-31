@@ -25,13 +25,8 @@ object GoArchFileUtils {
      * Is go arch file?
      */
     fun isValid(file: VirtualFile): Boolean {
-        if (file is StubVirtualFile) {
-            return false
-        }
-
-        if (!file.isValid) {
-            return false
-        }
+        if (file is StubVirtualFile) return false
+        if (!file.isValid) return false
 
         val extension = file.extension
         if (!("yml".equals(extension, ignoreCase = true) || "yaml".equals(extension, ignoreCase = true))) {

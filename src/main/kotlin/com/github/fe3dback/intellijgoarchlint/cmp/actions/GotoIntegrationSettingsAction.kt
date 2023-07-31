@@ -1,6 +1,6 @@
 package com.github.fe3dback.intellijgoarchlint.cmp.actions
 
-import com.github.fe3dback.intellijgoarchlint.config.file.GoArchIcons
+import com.github.fe3dback.intellijgoarchlint.common.GoArchIcons
 import com.github.fe3dback.intellijgoarchlint.settings.PluginConfiguration
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent

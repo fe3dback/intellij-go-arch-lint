@@ -27,10 +27,8 @@ class GoArchJsonSchemaProvider(
     }
 
     override fun getSchemaFile() = schemaFileLazy
-
     override fun getSchemaVersion() = JsonSchemaVersion.SCHEMA_7
-
-    override fun getSchemaType() = SchemaType.embeddedSchema
+    override fun getSchemaType() = SchemaType.schema
 
     override fun getName(): String {
         if (isDefault) {

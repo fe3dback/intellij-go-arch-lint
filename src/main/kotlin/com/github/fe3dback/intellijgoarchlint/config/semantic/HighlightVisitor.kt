@@ -39,43 +39,19 @@ class HighlightVisitor : RainbowVisitor() {
         addInfo(getInfo(context, element, id, TextAttributesKey.createTextAttributesKey(id)))
     }
 
-    private fun isPossibleComponent(element: PsiElement): Boolean {
-//        if (element is YAMLKeyValue) {
-//            return true
-//        }
+    private fun isComponent(element: PsiElement): Boolean {
+        if (!isPossibleComponent(element)) return false
 
+        if (GoArchPsiPattern.commonComponents().accepts(element)) return true
+        if (GoArchPsiPattern.commonVendors().accepts(element)) return true
+        if (GoArchPsiPattern.mayDependInDependencies().accepts(element)) return true
+        if (GoArchPsiPattern.canUseInDependencies().accepts(element)) return true
+
+        return false
+    }
+
+    private fun isPossibleComponent(element: PsiElement): Boolean {
         return element is YAMLPlainTextImpl
     }
 
-    private fun isComponent(element: PsiElement): Boolean {
-        if (!isPossibleComponent(element)) {
-            return false
-        }
-
-        if (GoArchPsiPattern.commonComponents().accepts(element)) {
-            return true
-        }
-
-        if (GoArchPsiPattern.commonVendors().accepts(element)) {
-            return true
-        }
-
-//        if (GoArchPsiPattern.components().accepts(element)) {
-//            return true
-//        }
-//
-//        if (GoArchPsiPattern.vendors().accepts(element)) {
-//            return true
-//        }
-//
-//        if (GoArchPsiPattern.componentDependencies().accepts(element)) {
-//            return true
-//        }
-
-        if (GoArchPsiPattern.mayDependInDependencies().accepts(element)) {
-            return true
-        }
-
-        return GoArchPsiPattern.canUseInDependencies().accepts(element)
-    }
 }

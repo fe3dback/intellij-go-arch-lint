@@ -7,7 +7,6 @@ import com.intellij.configurationStore.serializeObjectInto
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.Service
-import com.intellij.openapi.components.StoragePathMacros
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.util.xmlb.XmlSerializer.deserializeInto
@@ -21,8 +20,8 @@ private const val elementID: String = "GoArchLintSettings"
 
 val Project.goArchLintStorage: Storage get() = service()
 
-@Service
-@StateComponent(name = elementID, storages = [StorageComponent(StoragePathMacros.PRODUCT_WORKSPACE_FILE)])
+@Service(Service.Level.PROJECT)
+@StateComponent(name = elementID, storages = [StorageComponent("go-arch-lint.xml")])
 class Storage(private val project: Project) :
     PersistentStateComponent<Element> {
 

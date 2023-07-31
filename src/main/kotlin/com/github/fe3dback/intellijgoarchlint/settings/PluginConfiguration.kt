@@ -1,6 +1,6 @@
 package com.github.fe3dback.intellijgoarchlint.settings
 
-import com.github.fe3dback.intellijgoarchlint.config.file.GoArchIcons
+import com.github.fe3dback.intellijgoarchlint.common.GoArchIcons
 import com.intellij.icons.AllIcons
 import com.intellij.ide.impl.isTrusted
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory

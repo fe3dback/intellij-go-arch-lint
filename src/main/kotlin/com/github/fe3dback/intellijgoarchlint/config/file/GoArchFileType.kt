@@ -1,5 +1,6 @@
 package com.github.fe3dback.intellijgoarchlint.config.file
 
+import com.github.fe3dback.intellijgoarchlint.common.GoArchIcons
 import com.github.fe3dback.intellijgoarchlint.project.GoArchFileUtils
 import com.intellij.openapi.fileTypes.LanguageFileType
 import com.intellij.openapi.fileTypes.ex.FileTypeIdentifiableByVirtualFile

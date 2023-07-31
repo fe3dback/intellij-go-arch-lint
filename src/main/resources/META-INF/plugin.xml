@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.github.fe3dback.intellijgoarchlint</id>
     <name>GoArchLint File Support</name>
-    <version>0.7.2</version>
+    <version>0.8.0</version>
     <vendor url="https://github.com/fe3dback">fe3dback</vendor>
     <description>
         Provides assistance for editing go arch YAML files.
@@ -18,7 +18,6 @@
         - code lint
         - docker image runner
         - show lint progress in top/right corner of opened file
-        - fix goto usages in config (replace json schema redirect to custom redirect)
     -->
 
     <extensions defaultExtensionNs="com.intellij">

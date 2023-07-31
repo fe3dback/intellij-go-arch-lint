@@ -1,6 +1,6 @@
 package com.github.fe3dback.intellijgoarchlint.config.reference.provider
 
-import com.github.fe3dback.intellijgoarchlint.config.file.GoArchIcons
+import com.github.fe3dback.intellijgoarchlint.common.GoArchIcons
 import com.github.fe3dback.intellijgoarchlint.config.psi.GoArchPsiUtils
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.PsiElement

@@ -1,6 +1,5 @@
 package com.github.fe3dback.intellijgoarchlint.settings
 
-import com.github.fe3dback.intellijgoarchlint.GoArchLintInstallPath
 import com.github.fe3dback.intellijgoarchlint.models.Version
 import com.github.fe3dback.intellijgoarchlint.models.invalidVersionFrom
 
@@ -10,10 +9,6 @@ enum class ExecutorTarget {
 }
 
 enum class LinterVersion { // todo: install
-    v1_08,
-    v1_09,
-    v1_10,
-    v1_11,
     latest,
 }
 
@@ -26,7 +21,6 @@ data class State(
 
     var executorHostVerifiedVersion: Version = invalidVersionFrom("?"),
     var executorHostVerifiedBinaryPath: String = "",
-    var executorHostTmpBinaryPath: String = GoArchLintInstallPath,
 
     var enableSubSelfInspections: Boolean = true,
 )

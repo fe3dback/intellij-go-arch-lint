@@ -1,6 +1,15 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
 # intellij-go-arch-lint Changelog
+## [0.8.0]
+### Added
+- linter integration with IDE (currently only linux is supported)
+- linter settings in IDE
+- checking config with external validation (go-arch-lint binary)
+
+### Changed
+- "find usages" in config now works better (previously redirect to json schema)
+
 ## [0.7.2]
 ### Changed
 - support up to IDE version to 2023.1

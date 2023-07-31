@@ -10,4 +10,10 @@
                 implementation="com.github.fe3dback.intellijgoarchlint.config.schema.GoArchJsonSchemaEnabler"
         />
     </extensions>
+
+    <extensions defaultExtensionNs="com.intellij.json">
+        <jsonSchemaGotoDeclarationSuppressor
+                implementation="com.github.fe3dback.intellijgoarchlint.config.schema.GoArchJsonSchemaGotoSuppressor"
+        />
+    </extensions>
 </idea-plugin>

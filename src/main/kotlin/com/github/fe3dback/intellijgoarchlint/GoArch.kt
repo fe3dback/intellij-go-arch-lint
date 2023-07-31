@@ -1,7 +1,5 @@
 package com.github.fe3dback.intellijgoarchlint
 
-const val GoArchLintInstallPath = "~/.config/go-arch-lint/bin/go-arch-lint"
-
 object GoArch {
     // version range
     // see src/main/resources/schemas
